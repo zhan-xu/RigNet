@@ -58,8 +58,6 @@ After downloading the pre-processed data, one needs to create the data directly 
 
 Remember to change the root_folder to the directory you uncompress the pre-processed data.
 
-Note:  As a new feature, 
-
 ## Training
 
 Notes: As new features, we have three improvements from the paper: (1) To train the joint prediction module, now we pretrain both the regression module and the attention module, and then fine-tune them together with differentiable clustering. (2) We optimized the hyper-parameters in the fine-tuning step. (3) the input feature for skinning now includes another dimension per bone (--Lf), indicating whether this bone is a virtual leaf bone or not. (To enable control from the end-joints, we presume a virtual bone for them. Please check the code for more details.)
