@@ -1,0 +1,13 @@
+.idea/
+.vscode/
+__pycache__/
+utils/rigging_parser/*.pyc
+logs/
+results/
+checkpoints/
+*.html
+*.error
+*.sbatch
+*.err
+*.sh
+sideview.json

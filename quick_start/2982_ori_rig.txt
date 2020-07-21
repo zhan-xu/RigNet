@@ -1,0 +1,989 @@
+joints root 0.00000000 0.33316302 -0.01654356
+joints root_dup_0 0.00150797 0.33467099 -0.01503559
+joints root_dup_1 0.00344572 0.33660874 -0.01309783
+joints root_dup_2 0.00234260 0.33550563 -0.01420096
+joints root_dup_3 0.00150797 0.33467099 -0.01503559
+joints joint_0 -0.03852255 0.31433499 -0.04277600
+joints joint_8 0.00000000 0.31649557 0.09709806
+joints joint_13 0.00000000 0.34935096 -0.09293386
+joints joint_14 0.03852255 0.31433499 -0.04277600
+joints joint_5 -0.06986719 0.19261359 -0.07015888
+joints joint_9 0.00000000 0.31873053 0.18967311
+joints joint_11 0.00000000 0.35519883 -0.16773394
+joints joint_19 0.06986719 0.19261359 -0.07015888
+joints joint_4 -0.07330984 0.03951833 -0.10116436
+joints joint_9_dup_0 0.00279854 0.32152906 0.19247165
+joints joint_9_dup_1 0.00294626 0.32167679 0.19261937
+joints joint_9_dup_2 0.00279854 0.32152906 0.19247165
+joints joint_7 0.00000000 0.39774394 -0.32267895
+joints joint_18 0.07330984 0.03951833 -0.10116436
+joints joint_3 -0.05475236 0.29372793 0.26094070
+joints joint_10 0.00000000 0.32409886 0.28773496
+joints joint_17 0.05475236 0.29372793 0.26094070
+joints joint_2 -0.07628174 0.21982130 0.24781665
+joints joint_6 0.00000000 0.42872453 0.37057567
+joints joint_16 0.07628174 0.21982130 0.24781665
+joints joint_1 -0.07466938 0.04337836 0.25637770
+joints joint_15 0.07466938 0.04337836 0.25637770
+root root
+skin 0 joint_18 1.0000 
+skin 1 joint_19 0.2766 joint_18 0.7234 
+skin 2 joint_18 1.0000 
+skin 3 joint_6 1.0000 
+skin 4 joint_6 1.0000 
+skin 5 joint_6 1.0000 
+skin 6 joint_10 0.5809 joint_6 0.4191 
+skin 7 joint_10 0.5914 joint_6 0.4086 
+skin 8 joint_10 0.5743 joint_6 0.4257 
+skin 9 joint_6 1.0000 
+skin 10 joint_6 1.0000 
+skin 11 joint_6 1.0000 
+skin 12 joint_16 0.2662 joint_15 0.7338 
+skin 13 joint_15 1.0000 
+skin 14 joint_15 1.0000 
+skin 15 joint_16 0.6008 joint_15 0.3992 
+skin 16 joint_16 0.7299 joint_15 0.2701 
+skin 17 joint_10 0.5313 joint_6 0.4687 
+skin 18 joint_10 0.3776 joint_6 0.6224 
+skin 19 joint_10 0.5659 joint_6 0.4341 
+skin 20 joint_10 0.5042 joint_6 0.4958 
+skin 21 joint_10 0.5574 joint_6 0.4426 
+skin 22 joint_10 0.4232 joint_6 0.5768 
+skin 23 joint_10 0.4006 joint_6 0.5994 
+skin 24 joint_10 0.5289 joint_6 0.4711 
+skin 25 joint_10 0.5207 joint_6 0.4793 
+skin 26 joint_10 0.5655 joint_6 0.4345 
+skin 27 joint_6 1.0000 
+skin 28 joint_6 1.0000 
+skin 29 joint_6 1.0000 
+skin 30 joint_10 0.2803 joint_6 0.7197 
+skin 31 joint_10 0.3819 joint_6 0.6181 
+skin 32 joint_6 1.0000 
+skin 33 joint_10 0.3009 joint_6 0.6991 
+skin 34 joint_10 0.4760 joint_6 0.5240 
+skin 35 joint_10 0.4994 joint_6 0.5006 
+skin 36 joint_6 1.0000 
+skin 37 joint_6 1.0000 
+skin 38 joint_6 1.0000 
+skin 39 joint_6 1.0000 
+skin 40 joint_6 1.0000 
+skin 41 joint_6 1.0000 
+skin 42 joint_6 1.0000 
+skin 43 joint_6 1.0000 
+skin 44 joint_6 1.0000 
+skin 45 joint_6 1.0000 
+skin 46 joint_6 1.0000 
+skin 47 joint_6 1.0000 
+skin 48 joint_6 1.0000 
+skin 49 joint_6 1.0000 
+skin 50 joint_6 1.0000 
+skin 51 joint_6 1.0000 
+skin 52 joint_6 1.0000 
+skin 53 joint_6 1.0000 
+skin 54 joint_6 1.0000 
+skin 55 joint_6 1.0000 
+skin 56 joint_6 1.0000 
+skin 57 joint_10 0.4628 joint_6 0.5372 
+skin 58 joint_10 0.5892 joint_6 0.4108 
+skin 59 joint_10 0.5818 joint_6 0.4182 
+skin 60 joint_10 0.4030 joint_6 0.5970 
+skin 61 joint_10 0.5394 joint_6 0.4606 
+skin 62 joint_10 0.5440 joint_6 0.4560 
+skin 63 joint_6 1.0000 
+skin 64 joint_6 1.0000 
+skin 65 joint_6 1.0000 
+skin 66 joint_6 1.0000 
+skin 67 joint_6 1.0000 
+skin 68 joint_6 1.0000 
+skin 69 joint_6 1.0000 
+skin 70 joint_6 1.0000 
+skin 71 joint_6 1.0000 
+skin 72 joint_6 1.0000 
+skin 73 joint_6 1.0000 
+skin 74 joint_6 1.0000 
+skin 75 joint_6 1.0000 
+skin 76 joint_6 1.0000 
+skin 77 joint_10 0.5847 joint_6 0.4153 
+skin 78 joint_10 0.5747 joint_6 0.4253 
+skin 79 joint_10 0.5651 joint_6 0.4349 
+skin 80 joint_10 0.5777 joint_6 0.4223 
+skin 81 joint_6 1.0000 
+skin 82 joint_10 0.5371 joint_6 0.4629 
+skin 83 joint_10 0.5370 joint_6 0.4630 
+skin 84 joint_10 0.5178 joint_6 0.4822 
+skin 85 joint_10 0.5145 joint_6 0.4855 
+skin 86 joint_10 0.3526 joint_6 0.6474 
+skin 87 joint_10 0.3914 joint_6 0.6086 
+skin 88 joint_10 0.3847 joint_6 0.6153 
+skin 89 joint_10 0.4943 joint_6 0.5057 
+skin 90 joint_6 1.0000 
+skin 91 joint_10 0.5609 joint_6 0.4391 
+skin 92 joint_6 1.0000 
+skin 93 joint_6 1.0000 
+skin 94 joint_6 1.0000 
+skin 95 joint_6 1.0000 
+skin 96 joint_6 1.0000 
+skin 97 joint_6 1.0000 
+skin 98 joint_10 0.3965 joint_6 0.6035 
+skin 99 joint_6 1.0000 
+skin 100 joint_10 0.5453 joint_6 0.4547 
+skin 101 joint_6 1.0000 
+skin 102 joint_6 1.0000 
+skin 103 joint_6 1.0000 
+skin 104 joint_10 0.2603 joint_6 0.7397 
+skin 105 joint_6 1.0000 
+skin 106 joint_6 1.0000 
+skin 107 joint_6 1.0000 
+skin 108 joint_6 1.0000 
+skin 109 joint_10 0.5262 joint_6 0.4738 
+skin 110 joint_10 0.5372 joint_6 0.4628 
+skin 111 joint_6 1.0000 
+skin 112 joint_6 1.0000 
+skin 113 joint_6 1.0000 
+skin 114 joint_6 1.0000 
+skin 115 joint_6 1.0000 
+skin 116 joint_6 1.0000 
+skin 117 joint_6 1.0000 
+skin 118 joint_6 1.0000 
+skin 119 joint_6 1.0000 
+skin 120 joint_6 1.0000 
+skin 121 joint_10 0.2710 joint_6 0.7290 
+skin 122 joint_6 1.0000 
+skin 123 joint_6 1.0000 
+skin 124 joint_6 1.0000 
+skin 125 joint_6 1.0000 
+skin 126 joint_10 0.3300 joint_6 0.6700 
+skin 127 joint_10 0.3867 joint_6 0.6133 
+skin 128 joint_6 1.0000 
+skin 129 joint_6 1.0000 
+skin 130 joint_6 1.0000 
+skin 131 joint_10 0.3299 joint_6 0.6701 
+skin 132 joint_10 0.4877 joint_6 0.5123 
+skin 133 joint_10 0.6178 joint_6 0.3822 
+skin 134 joint_10 1.0000 
+skin 135 joint_10 1.0000 
+skin 136 joint_10 0.5135 joint_6 0.4865 
+skin 137 joint_10 0.4727 joint_6 0.5273 
+skin 138 joint_10 0.4906 joint_6 0.5094 
+skin 139 joint_10 0.5258 joint_6 0.4742 
+skin 140 joint_10 0.5380 joint_6 0.4620 
+skin 141 joint_10 1.0000 
+skin 142 joint_10 0.7233 joint_6 0.2767 
+skin 143 joint_10 0.3387 joint_6 0.6613 
+skin 144 joint_10 0.3383 joint_6 0.6617 
+skin 145 joint_10 0.2923 joint_6 0.7077 
+skin 146 joint_10 0.3581 joint_6 0.6419 
+skin 147 joint_10 0.4348 joint_6 0.5652 
+skin 148 joint_10 0.3025 joint_6 0.6975 
+skin 149 joint_10 0.3903 joint_6 0.6097 
+skin 150 joint_10 0.3468 joint_6 0.6532 
+skin 151 joint_10 0.3063 joint_6 0.6937 
+skin 152 joint_10 0.2863 joint_6 0.7137 
+skin 153 joint_10 0.4002 joint_6 0.5998 
+skin 154 joint_10 0.3607 joint_6 0.6393 
+skin 155 joint_6 1.0000 
+skin 156 joint_6 1.0000 
+skin 157 joint_10 0.4866 joint_6 0.5134 
+skin 158 joint_10 0.4544 joint_6 0.5456 
+skin 159 joint_6 1.0000 
+skin 160 joint_6 1.0000 
+skin 161 joint_10 0.5469 joint_6 0.4531 
+skin 162 joint_10 0.2763 joint_6 0.7237 
+skin 163 joint_10 0.5629 joint_6 0.4371 
+skin 164 joint_10 0.5437 joint_6 0.4563 
+skin 165 joint_6 1.0000 
+skin 166 joint_6 1.0000 
+skin 167 joint_6 1.0000 
+skin 168 joint_16 0.4030 joint_15 0.5970 
+skin 169 joint_16 0.4091 joint_15 0.5909 
+skin 170 joint_10 0.2721 joint_6 0.7279 
+skin 171 joint_10 0.4796 joint_6 0.5204 
+skin 172 joint_10 0.6112 joint_6 0.3888 
+skin 173 joint_16 0.3465 joint_15 0.6535 
+skin 174 joint_16 0.4304 joint_15 0.5696 
+skin 175 joint_16 0.2714 joint_15 0.7286 
+skin 176 joint_15 1.0000 
+skin 177 joint_15 1.0000 
+skin 178 joint_15 1.0000 
+skin 179 joint_15 1.0000 
+skin 180 joint_15 1.0000 
+skin 181 joint_15 1.0000 
+skin 182 joint_15 1.0000 
+skin 183 joint_15 1.0000 
+skin 184 joint_16 0.6551 joint_15 0.3449 
+skin 185 joint_16 0.3886 joint_15 0.6114 
+skin 186 joint_15 1.0000 
+skin 187 joint_15 1.0000 
+skin 188 joint_15 1.0000 
+skin 189 joint_16 0.3822 joint_15 0.6178 
+skin 190 joint_6 1.0000 
+skin 191 joint_15 1.0000 
+skin 192 joint_15 1.0000 
+skin 193 joint_15 1.0000 
+skin 194 joint_6 1.0000 
+skin 195 joint_6 1.0000 
+skin 196 joint_6 1.0000 
+skin 197 joint_6 1.0000 
+skin 198 joint_6 1.0000 
+skin 199 joint_6 1.0000 
+skin 200 joint_6 1.0000 
+skin 201 joint_6 1.0000 
+skin 202 joint_6 1.0000 
+skin 203 joint_10 0.2827 joint_6 0.7173 
+skin 204 joint_6 1.0000 
+skin 205 joint_10 0.2797 joint_6 0.7203 
+skin 206 joint_10 0.3159 joint_6 0.6841 
+skin 207 joint_10 0.2916 joint_6 0.7084 
+skin 208 joint_10 0.2825 joint_6 0.7175 
+skin 209 joint_6 1.0000 
+skin 210 joint_6 1.0000 
+skin 211 joint_10 0.2684 joint_6 0.7316 
+skin 212 joint_6 1.0000 
+skin 213 joint_6 1.0000 
+skin 214 joint_6 1.0000 
+skin 215 joint_6 1.0000 
+skin 216 joint_15 1.0000 
+skin 217 joint_6 1.0000 
+skin 218 joint_6 1.0000 
+skin 219 joint_6 1.0000 
+skin 220 joint_6 1.0000 
+skin 221 joint_6 1.0000 
+skin 222 joint_6 1.0000 
+skin 223 joint_6 1.0000 
+skin 224 joint_6 1.0000 
+skin 225 joint_6 1.0000 
+skin 226 joint_15 1.0000 
+skin 227 joint_15 1.0000 
+skin 228 joint_15 1.0000 
+skin 229 joint_15 1.0000 
+skin 230 joint_15 1.0000 
+skin 231 joint_15 1.0000 
+skin 232 joint_15 1.0000 
+skin 233 joint_15 1.0000 
+skin 234 joint_15 1.0000 
+skin 235 joint_16 0.6460 joint_15 0.3540 
+skin 236 joint_16 0.3944 joint_15 0.6056 
+skin 237 joint_16 0.6995 joint_15 0.3005 
+skin 238 joint_15 1.0000 
+skin 239 joint_15 1.0000 
+skin 240 joint_10 0.4093 joint_6 0.5907 
+skin 241 joint_10 0.3192 joint_6 0.6808 
+skin 242 joint_10 0.4334 joint_6 0.5666 
+skin 243 joint_4 1.0000 
+skin 244 joint_4 1.0000 
+skin 245 joint_4 1.0000 
+skin 246 joint_4 1.0000 
+skin 247 joint_4 1.0000 
+skin 248 joint_4 1.0000 
+skin 249 joint_4 1.0000 
+skin 250 joint_4 1.0000 
+skin 251 joint_4 1.0000 
+skin 252 joint_4 1.0000 
+skin 253 joint_4 1.0000 
+skin 254 joint_4 1.0000 
+skin 255 joint_4 1.0000 
+skin 256 joint_15 1.0000 
+skin 257 joint_15 1.0000 
+skin 258 joint_15 1.0000 
+skin 259 joint_15 1.0000 
+skin 260 joint_4 1.0000 
+skin 261 joint_4 1.0000 
+skin 262 joint_4 1.0000 
+skin 263 joint_5 0.2807 joint_4 0.7193 
+skin 264 joint_4 1.0000 
+skin 265 joint_4 1.0000 
+skin 266 joint_4 1.0000 
+skin 267 joint_4 1.0000 
+skin 268 joint_4 1.0000 
+skin 269 joint_4 1.0000 
+skin 270 joint_4 1.0000 
+skin 271 joint_4 1.0000 
+skin 272 joint_4 1.0000 
+skin 273 joint_16 0.3241 joint_15 0.6759 
+skin 274 joint_16 0.4363 joint_15 0.5637 
+skin 275 joint_11 0.4966 joint_7 0.5034 
+skin 276 joint_11 0.4007 joint_7 0.5993 
+skin 277 joint_11 0.6100 joint_7 0.3900 
+skin 278 joint_11 0.4531 joint_7 0.5469 
+skin 279 joint_11 0.7077 joint_7 0.2923 
+skin 280 joint_11 0.4155 joint_7 0.5845 
+skin 281 joint_11 0.6566 joint_7 0.3434 
+skin 282 joint_11 0.6089 joint_7 0.3911 
+skin 283 joint_11 0.6756 joint_7 0.3244 
+skin 284 joint_10 0.4887 joint_6 0.5113 
+skin 285 joint_10 0.4859 joint_6 0.5141 
+skin 286 joint_10 0.5846 joint_6 0.4154 
+skin 287 joint_10 0.4659 joint_6 0.5341 
+skin 288 joint_10 0.4261 joint_6 0.5739 
+skin 289 joint_10 0.3905 joint_6 0.6095 
+skin 290 joint_10 0.4808 joint_6 0.5192 
+skin 291 joint_10 0.4048 joint_6 0.5952 
+skin 292 joint_10 0.4850 joint_6 0.5150 
+skin 293 joint_10 0.4096 joint_6 0.5904 
+skin 294 joint_10 0.4130 joint_6 0.5870 
+skin 295 joint_10 0.3750 joint_6 0.6250 
+skin 296 joint_10 0.4252 joint_6 0.5748 
+skin 297 joint_10 0.3694 joint_6 0.6306 
+skin 298 joint_10 0.3582 joint_6 0.6418 
+skin 299 joint_10 0.3597 joint_6 0.6403 
+skin 300 joint_10 0.3520 joint_6 0.6480 
+skin 301 joint_10 0.3650 joint_6 0.6350 
+skin 302 joint_10 0.4526 joint_6 0.5474 
+skin 303 joint_10 0.5166 joint_6 0.4834 
+skin 304 joint_10 0.5827 joint_6 0.4173 
+skin 305 joint_2 0.5944 joint_1 0.4056 
+skin 306 joint_2 1.0000 
+skin 307 joint_2 0.4078 joint_1 0.5922 
+skin 308 joint_1 1.0000 
+skin 309 joint_1 1.0000 
+skin 310 joint_1 1.0000 
+skin 311 joint_1 1.0000 
+skin 312 joint_1 1.0000 
+skin 313 joint_1 1.0000 
+skin 314 joint_1 1.0000 
+skin 315 joint_11 0.6568 joint_7 0.3432 
+skin 316 joint_11 0.4290 joint_7 0.5710 
+skin 317 joint_10 0.4722 joint_6 0.5278 
+skin 318 joint_10 0.3668 joint_6 0.6332 
+skin 319 joint_10 0.3690 joint_6 0.6310 
+skin 320 joint_10 0.4116 joint_6 0.5884 
+skin 321 joint_10 0.3579 joint_6 0.6421 
+skin 322 joint_10 0.3203 joint_6 0.6797 
+skin 323 joint_10 0.3293 joint_6 0.6707 
+skin 324 joint_10 0.4323 joint_6 0.5677 
+skin 325 joint_10 0.4740 joint_6 0.5260 
+skin 326 joint_11 0.4147 joint_7 0.5853 
+skin 327 joint_11 0.6834 joint_7 0.3166 
+skin 328 joint_11 0.4024 joint_7 0.5976 
+skin 329 joint_1 1.0000 
+skin 330 joint_1 1.0000 
+skin 331 joint_1 1.0000 
+skin 332 joint_1 1.0000 
+skin 333 joint_1 1.0000 
+skin 334 joint_1 1.0000 
+skin 335 joint_1 1.0000 
+skin 336 joint_1 1.0000 
+skin 337 joint_1 1.0000 
+skin 338 joint_1 1.0000 
+skin 339 joint_11 0.3794 joint_7 0.6206 
+skin 340 joint_11 0.6421 joint_7 0.3579 
+skin 341 joint_10 0.5808 joint_6 0.4192 
+skin 342 joint_10 0.5528 joint_6 0.4472 
+skin 343 joint_11 0.4207 joint_7 0.5793 
+skin 344 joint_10 0.5018 joint_6 0.4982 
+skin 345 joint_10 0.5271 joint_6 0.4729 
+skin 346 joint_10 0.5364 joint_6 0.4636 
+skin 347 joint_10 0.5256 joint_6 0.4744 
+skin 348 joint_1 1.0000 
+skin 349 joint_1 1.0000 
+skin 350 joint_1 1.0000 
+skin 351 joint_1 1.0000 
+skin 352 joint_1 1.0000 
+skin 353 joint_1 1.0000 
+skin 354 joint_10 0.4676 joint_6 0.5324 
+skin 355 joint_11 0.2879 joint_7 0.7121 
+skin 356 joint_11 0.3985 joint_7 0.6015 
+skin 357 joint_11 0.3016 joint_7 0.6984 
+skin 358 joint_11 0.2616 joint_7 0.7384 
+skin 359 joint_11 0.3095 joint_7 0.6905 
+skin 360 joint_7 1.0000 
+skin 361 joint_1 1.0000 
+skin 362 joint_10 0.4943 joint_6 0.5057 
+skin 363 joint_1 1.0000 
+skin 364 joint_1 1.0000 
+skin 365 joint_1 1.0000 
+skin 366 joint_1 1.0000 
+skin 367 root_dup_2 0.7381 root_dup_3 0.2619 
+skin 368 root_dup_2 0.5020 root_dup_3 0.4980 
+skin 369 root_dup_2 0.6787 joint_13 0.3213 
+skin 370 joint_1 1.0000 
+skin 371 joint_2 0.4100 joint_1 0.5900 
+skin 372 joint_2 0.3872 joint_1 0.6128 
+skin 373 joint_10 0.6240 joint_6 0.3760 
+skin 374 joint_2 0.4511 joint_1 0.5489 
+skin 375 joint_2 0.4609 joint_1 0.5391 
+skin 376 joint_1 1.0000 
+skin 377 joint_2 0.3798 joint_1 0.6202 
+skin 378 joint_2 0.3947 joint_1 0.6053 
+skin 379 root_dup_3 0.5027 joint_14 0.4973 
+skin 380 root_dup_2 0.2381 root_dup_3 0.3352 joint_13 0.1770 joint_14 0.2496 
+skin 381 root_dup_3 1.0000 
+skin 382 root_dup_1 0.1994 root_dup_3 0.2750 joint_14 0.5256 
+skin 383 root_dup_1 0.3282 root_dup_3 0.4810 joint_14 0.1908 
+skin 384 root_dup_1 0.4795 root_dup_3 0.1869 joint_14 0.3336 
+skin 385 joint_5 0.5645 joint_4 0.4355 
+skin 386 joint_5 1.0000 
+skin 387 joint_5 1.0000 
+skin 388 joint_5 1.0000 
+skin 389 joint_5 1.0000 
+skin 390 joint_5 1.0000 
+skin 391 joint_5 1.0000 
+skin 392 joint_5 0.4783 joint_4 0.5217 
+skin 393 joint_5 0.4480 joint_4 0.5520 
+skin 394 joint_5 0.4631 joint_4 0.5369 
+skin 395 joint_4 1.0000 
+skin 396 joint_2 0.5481 joint_1 0.4519 
+skin 397 joint_2 0.6982 joint_1 0.3018 
+skin 398 joint_4 1.0000 
+skin 399 joint_4 1.0000 
+skin 400 joint_5 0.4156 joint_4 0.5844 
+skin 401 joint_5 0.3901 joint_4 0.6099 
+skin 402 joint_5 0.3936 joint_4 0.6064 
+skin 403 joint_5 0.3771 joint_4 0.6229 
+skin 404 joint_0 0.2898 joint_5 0.7102 
+skin 405 joint_0 0.3223 joint_5 0.6777 
+skin 406 joint_0 0.5453 joint_5 0.4547 
+skin 407 joint_10 0.3567 joint_6 0.6433 
+skin 408 joint_10 0.3476 joint_6 0.6524 
+skin 409 joint_10 0.3461 joint_6 0.6539 
+skin 410 joint_10 0.3560 joint_6 0.6440 
+skin 411 joint_10 0.3191 joint_6 0.6809 
+skin 412 joint_10 0.2911 joint_6 0.7089 
+skin 413 joint_10 0.2884 joint_6 0.7116 
+skin 414 joint_10 0.3598 joint_6 0.6402 
+skin 415 joint_0 0.3122 joint_5 0.6878 
+skin 416 joint_0 0.5352 joint_5 0.4648 
+skin 417 joint_0 0.3717 joint_5 0.6283 
+skin 418 joint_0 0.5934 joint_5 0.4066 
+skin 419 joint_0 0.3310 joint_5 0.6690 
+skin 420 joint_0 0.6782 joint_5 0.3218 
+skin 421 joint_0 0.5171 joint_5 0.4829 
+skin 422 joint_0 0.6326 joint_5 0.3674 
+skin 423 joint_0 1.0000 
+skin 424 joint_0 0.5821 joint_5 0.4179 
+skin 425 joint_0 1.0000 
+skin 426 joint_0 1.0000 
+skin 427 joint_0 0.5465 joint_5 0.4535 
+skin 428 joint_2 1.0000 
+skin 429 joint_3 0.3062 joint_2 0.6938 
+skin 430 joint_3 0.3697 joint_2 0.6303 
+skin 431 joint_2 1.0000 
+skin 432 joint_3 0.5673 joint_2 0.4327 
+skin 433 joint_3 0.2781 joint_2 0.7219 
+skin 434 joint_9_dup_0 0.5048 joint_3 0.4952 
+skin 435 joint_9_dup_0 1.0000 
+skin 436 joint_9_dup_0 0.3384 joint_3 0.6616 
+skin 437 root_dup_1 0.3272 root_dup_2 0.2577 root_dup_3 0.4152 
+skin 438 root_dup_3 1.0000 
+skin 439 joint_2 1.0000 
+skin 440 joint_4 1.0000 
+skin 441 joint_4 1.0000 
+skin 442 joint_5 0.3442 joint_4 0.6558 
+skin 443 joint_5 0.2923 joint_4 0.7077 
+skin 444 root_dup_3 0.4291 joint_14 0.5709 
+skin 445 joint_14 0.6581 joint_19 0.3419 
+skin 446 joint_2 1.0000 
+skin 447 joint_2 1.0000 
+skin 448 joint_14 1.0000 
+skin 449 joint_2 0.3843 joint_1 0.6157 
+skin 450 joint_2 0.2678 joint_1 0.7322 
+skin 451 joint_2 0.4394 joint_1 0.5606 
+skin 452 joint_5 0.3031 joint_4 0.6969 
+skin 453 joint_4 1.0000 
+skin 454 joint_2 1.0000 
+skin 455 joint_2 1.0000 
+skin 456 joint_1 1.0000 
+skin 457 joint_5 0.5461 joint_4 0.4539 
+skin 458 joint_5 0.7248 joint_4 0.2752 
+skin 459 joint_16 0.7195 joint_15 0.2805 
+skin 460 joint_16 1.0000 
+skin 461 joint_16 0.5979 joint_15 0.4021 
+skin 462 joint_16 0.5869 joint_15 0.4131 
+skin 463 joint_16 0.7346 joint_15 0.2654 
+skin 464 joint_16 0.7060 joint_15 0.2940 
+skin 465 joint_16 1.0000 
+skin 466 joint_16 1.0000 
+skin 467 joint_16 1.0000 
+skin 468 joint_16 1.0000 
+skin 469 joint_16 1.0000 
+skin 470 joint_2 1.0000 
+skin 471 joint_2 1.0000 
+skin 472 joint_2 0.6292 joint_1 0.3708 
+skin 473 joint_2 0.7287 joint_1 0.2713 
+skin 474 joint_2 0.6053 joint_1 0.3947 
+skin 475 joint_3 0.3850 joint_2 0.6150 
+skin 476 joint_3 0.7058 joint_2 0.2942 
+skin 477 joint_3 0.6446 joint_2 0.3554 
+skin 478 joint_3 0.4475 joint_2 0.5525 
+skin 479 joint_9_dup_0 0.6433 joint_3 0.3567 
+skin 480 joint_9_dup_0 0.6448 joint_3 0.3552 
+skin 481 joint_9_dup_0 1.0000 
+skin 482 joint_9_dup_0 0.4982 joint_3 0.5018 
+skin 483 joint_9_dup_0 0.3578 joint_3 0.6422 
+skin 484 root_dup_3 1.0000 
+skin 485 joint_4 1.0000 
+skin 486 joint_4 1.0000 
+skin 487 joint_9_dup_1 0.3091 joint_10 0.6909 
+skin 488 joint_9_dup_0 0.3288 joint_9_dup_1 0.3429 joint_10 0.3283 
+skin 489 joint_10 1.0000 
+skin 490 joint_9_dup_1 1.0000 
+skin 491 joint_9_dup_0 1.0000 
+skin 492 joint_10 0.5153 joint_6 0.4847 
+skin 493 joint_19 0.6070 joint_18 0.3930 
+skin 494 joint_19 0.4180 joint_18 0.5820 
+skin 495 joint_19 0.5128 joint_18 0.4872 
+skin 496 joint_16 1.0000 
+skin 497 joint_16 1.0000 
+skin 498 joint_16 1.0000 
+skin 499 joint_19 0.3004 joint_18 0.6996 
+skin 500 joint_18 1.0000 
+skin 501 joint_18 1.0000 
+skin 502 joint_16 1.0000 
+skin 503 joint_16 1.0000 
+skin 504 joint_3 1.0000 
+skin 505 joint_3 0.5723 joint_10 0.2096 joint_2 0.2182 
+skin 506 joint_9_dup_0 0.3262 joint_3 0.6738 
+skin 507 joint_16 1.0000 
+skin 508 joint_16 1.0000 
+skin 509 joint_9_dup_1 0.1822 joint_9_dup_2 0.1905 joint_10 0.3855 joint_17 0.2418 
+skin 510 joint_9_dup_2 0.2836 joint_17 0.7164 
+skin 511 joint_8 0.2571 joint_9_dup_0 0.3792 joint_9_dup_2 0.1601 joint_3 0.2037 
+skin 512 joint_5 1.0000 
+skin 513 joint_5 1.0000 
+skin 514 joint_3 0.5694 joint_10 0.4306 
+skin 515 joint_3 0.2755 joint_10 0.7245 
+skin 516 joint_5 0.6876 joint_4 0.3124 
+skin 517 joint_5 0.6878 joint_4 0.3122 
+skin 518 joint_5 0.3815 joint_4 0.6185 
+skin 519 joint_5 0.4854 joint_4 0.5146 
+skin 520 joint_16 1.0000 
+skin 521 joint_16 1.0000 
+skin 522 joint_16 1.0000 
+skin 523 joint_3 0.7179 joint_10 0.2821 
+skin 524 joint_9_dup_1 0.2663 joint_10 0.5365 joint_17 0.1972 
+skin 525 joint_9_dup_1 0.3052 joint_10 0.6948 
+skin 526 joint_16 1.0000 
+skin 527 joint_9_dup_1 0.1227 joint_9_dup_2 0.2587 joint_10 0.2748 joint_17 0.3438 
+skin 528 joint_9_dup_2 0.4535 joint_10 0.2495 joint_17 0.2970 
+skin 529 joint_8 0.4860 joint_9_dup_0 0.5140 
+skin 530 joint_8 0.2494 joint_9_dup_0 0.3026 joint_9_dup_2 0.4480 
+skin 531 joint_8 0.6567 joint_9_dup_2 0.3433 
+skin 532 joint_8 0.2711 joint_9_dup_2 0.4617 joint_17 0.2672 
+skin 533 joint_8 0.7170 joint_9_dup_2 0.2830 
+skin 534 joint_14 0.3177 joint_19 0.6823 
+skin 535 joint_14 0.6152 joint_19 0.3848 
+skin 536 joint_14 0.3824 joint_19 0.6176 
+skin 537 joint_14 0.6476 joint_19 0.3524 
+skin 538 joint_14 0.6608 joint_19 0.3392 
+skin 539 joint_14 0.3529 joint_19 0.6471 
+skin 540 joint_14 0.5979 joint_19 0.4021 
+skin 541 joint_14 0.3571 joint_19 0.6429 
+skin 542 joint_16 0.5017 joint_15 0.4983 
+skin 543 joint_8 0.4097 joint_9_dup_1 0.3939 joint_9_dup_2 0.1965 
+skin 544 root_dup_1 0.3773 joint_8 0.6227 
+skin 545 root_dup_1 0.4023 joint_8 0.5977 
+skin 546 joint_2 1.0000 
+skin 547 joint_2 1.0000 
+skin 548 joint_2 1.0000 
+skin 549 joint_2 1.0000 
+skin 550 joint_10 1.0000 
+skin 551 joint_5 1.0000 
+skin 552 joint_5 1.0000 
+skin 553 joint_5 1.0000 
+skin 554 joint_19 1.0000 
+skin 555 joint_14 0.4723 joint_19 0.5277 
+skin 556 joint_5 1.0000 
+skin 557 joint_5 1.0000 
+skin 558 joint_14 0.5174 joint_19 0.4826 
+skin 559 joint_14 1.0000 
+skin 560 joint_5 1.0000 
+skin 561 joint_5 1.0000 
+skin 562 joint_14 0.5251 joint_19 0.4749 
+skin 563 joint_14 1.0000 
+skin 564 joint_5 1.0000 
+skin 565 joint_5 1.0000 
+skin 566 joint_14 1.0000 
+skin 567 joint_5 1.0000 
+skin 568 joint_5 1.0000 
+skin 569 joint_8 0.1499 joint_9_dup_1 0.3240 joint_9_dup_2 0.2841 joint_10 0.2420 
+skin 570 joint_2 1.0000 
+skin 571 joint_5 1.0000 
+skin 572 joint_5 1.0000 
+skin 573 joint_0 0.3488 joint_5 0.6512 
+skin 574 joint_0 0.2621 joint_5 0.7379 
+skin 575 joint_5 1.0000 
+skin 576 joint_5 1.0000 
+skin 577 joint_5 1.0000 
+skin 578 joint_5 1.0000 
+skin 579 joint_5 1.0000 
+skin 580 joint_2 1.0000 
+skin 581 joint_19 0.2988 joint_18 0.7012 
+skin 582 joint_19 0.2860 joint_18 0.7140 
+skin 583 joint_19 0.5674 joint_18 0.4326 
+skin 584 joint_19 0.2927 joint_18 0.7073 
+skin 585 joint_19 0.3211 joint_18 0.6789 
+skin 586 joint_19 0.4633 joint_18 0.5367 
+skin 587 joint_18 1.0000 
+skin 588 joint_18 1.0000 
+skin 589 joint_19 0.4728 joint_18 0.5272 
+skin 590 joint_19 1.0000 
+skin 591 joint_19 1.0000 
+skin 592 joint_19 1.0000 
+skin 593 joint_9_dup_2 0.2081 joint_17 0.5797 joint_16 0.2122 
+skin 594 joint_9_dup_2 0.5399 joint_17 0.4601 
+skin 595 joint_9_dup_2 0.2503 joint_17 0.5031 joint_16 0.2466 
+skin 596 joint_9_dup_2 0.5563 joint_17 0.4437 
+skin 597 joint_9_dup_2 0.6244 joint_17 0.3756 
+skin 598 joint_9_dup_2 1.0000 
+skin 599 joint_5 1.0000 
+skin 600 joint_5 1.0000 
+skin 601 joint_5 1.0000 
+skin 602 joint_9_dup_2 0.4865 joint_17 0.5135 
+skin 603 joint_8 0.2751 joint_9_dup_2 0.7249 
+skin 604 joint_19 1.0000 
+skin 605 joint_19 1.0000 
+skin 606 joint_2 1.0000 
+skin 607 joint_19 1.0000 
+skin 608 joint_19 1.0000 
+skin 609 joint_19 0.3087 joint_18 0.6913 
+skin 610 joint_16 1.0000 
+skin 611 joint_16 1.0000 
+skin 612 joint_17 0.3976 joint_16 0.6024 
+skin 613 joint_16 1.0000 
+skin 614 joint_17 0.2728 joint_16 0.7272 
+skin 615 joint_2 1.0000 
+skin 616 joint_18 1.0000 
+skin 617 joint_19 0.3156 joint_18 0.6844 
+skin 618 joint_16 1.0000 
+skin 619 joint_18 1.0000 
+skin 620 joint_19 0.2609 joint_18 0.7391 
+skin 621 joint_19 0.3256 joint_18 0.6744 
+skin 622 joint_19 0.3247 joint_18 0.6753 
+skin 623 joint_10 1.0000 
+skin 624 joint_9_dup_1 0.2926 joint_10 0.7074 
+skin 625 joint_17 0.3304 joint_16 0.6696 
+skin 626 joint_18 1.0000 
+skin 627 joint_18 1.0000 
+skin 628 joint_18 1.0000 
+skin 629 joint_19 1.0000 
+skin 630 joint_19 1.0000 
+skin 631 joint_19 1.0000 
+skin 632 joint_19 1.0000 
+skin 633 joint_19 1.0000 
+skin 634 joint_19 1.0000 
+skin 635 joint_19 1.0000 
+skin 636 joint_19 1.0000 
+skin 637 joint_19 1.0000 
+skin 638 joint_19 1.0000 
+skin 639 joint_19 1.0000 
+skin 640 joint_19 1.0000 
+skin 641 joint_19 1.0000 
+skin 642 joint_19 1.0000 
+skin 643 joint_19 0.4359 joint_18 0.5641 
+skin 644 joint_19 0.3370 joint_18 0.6630 
+skin 645 root_dup_0 0.1027 root_dup_2 0.2591 joint_0 0.1914 joint_13 0.2117 joint_14 0.2351 
+skin 646 root_dup_2 0.4251 joint_13 0.3300 joint_14 0.2450 
+skin 647 joint_14 1.0000 
+skin 648 joint_19 0.3699 joint_18 0.6301 
+skin 649 joint_19 0.4651 joint_18 0.5349 
+skin 650 joint_19 0.6688 joint_18 0.3312 
+skin 651 joint_19 0.6670 joint_18 0.3330 
+skin 652 root_dup_0 0.1779 root_dup_1 0.1730 root_dup_3 0.1265 joint_0 0.2843 joint_14 0.2383 
+skin 653 root_dup_1 0.4067 root_dup_3 0.2830 joint_14 0.3103 
+skin 654 root_dup_0 0.4927 joint_0 0.5073 
+skin 655 root_dup_0 1.0000 
+skin 656 root_dup_0 0.3313 root_dup_2 0.2080 joint_0 0.2469 joint_13 0.2138 
+skin 657 joint_18 1.0000 
+skin 658 joint_18 1.0000 
+skin 659 joint_18 1.0000 
+skin 660 joint_9_dup_1 0.1775 joint_3 0.4062 joint_10 0.4163 
+skin 661 joint_18 1.0000 
+skin 662 joint_18 1.0000 
+skin 663 joint_18 1.0000 
+skin 664 joint_9_dup_0 0.1668 joint_9_dup_2 0.1958 joint_3 0.3417 joint_17 0.2957 
+skin 665 joint_9_dup_1 0.1039 joint_9_dup_2 0.1243 joint_3 0.2934 joint_10 0.2050 joint_17 0.2734 
+skin 666 joint_18 1.0000 
+skin 667 joint_18 1.0000 
+skin 668 joint_18 1.0000 
+skin 669 joint_18 1.0000 
+skin 670 joint_18 1.0000 
+skin 671 joint_9_dup_1 0.3274 joint_10 0.6726 
+skin 672 joint_9_dup_1 0.2387 joint_3 0.2541 joint_10 0.5072 
+skin 673 root_dup_2 0.5843 joint_13 0.4157 
+skin 674 root_dup_2 0.3359 root_dup_3 0.1298 joint_13 0.2846 joint_14 0.2497 
+skin 675 joint_18 1.0000 
+skin 676 root_dup_1 1.0000 
+skin 677 root_dup_1 1.0000 
+skin 678 root_dup_0 0.2828 root_dup_1 0.2175 joint_0 0.4997 
+skin 679 root_dup_0 0.2337 root_dup_1 0.4816 joint_0 0.2848 
+skin 680 root_dup_0 0.4846 root_dup_1 0.3409 joint_0 0.1745 
+skin 681 root_dup_1 1.0000 
+skin 682 root_dup_1 0.2600 root_dup_2 0.7400 
+skin 683 root_dup_1 0.4566 root_dup_2 0.5434 
+skin 684 root_dup_1 1.0000 
+skin 685 joint_19 1.0000 
+skin 686 joint_14 0.2621 joint_19 0.7379 
+skin 687 joint_19 1.0000 
+skin 688 joint_19 1.0000 
+skin 689 joint_19 1.0000 
+skin 690 joint_19 1.0000 
+skin 691 root_dup_1 0.4518 root_dup_2 0.5482 
+skin 692 root_dup_1 1.0000 
+skin 693 joint_0 1.0000 
+skin 694 root_dup_2 0.3886 joint_0 0.2742 joint_13 0.3372 
+skin 695 root_dup_0 0.3300 joint_0 0.6700 
+skin 696 joint_0 1.0000 
+skin 697 root_dup_2 0.4573 joint_13 0.5427 
+skin 698 root_dup_2 0.5077 joint_13 0.4923 
+skin 699 root_dup_2 0.4128 joint_13 0.5872 
+skin 700 root_dup_2 0.4456 joint_13 0.5544 
+skin 701 root_dup_2 0.5912 joint_13 0.4088 
+skin 702 root_dup_0 0.3276 root_dup_1 0.3082 joint_0 0.2246 joint_14 0.1397 
+skin 703 joint_19 1.0000 
+skin 704 joint_19 1.0000 
+skin 705 joint_19 0.5672 joint_18 0.4328 
+skin 706 root_dup_0 0.2996 root_dup_1 0.7004 
+skin 707 root_dup_0 0.1296 root_dup_2 0.3140 joint_0 0.2571 joint_13 0.2993 
+skin 708 root_dup_2 0.4829 joint_13 0.5171 
+skin 709 root_dup_2 1.0000 
+skin 710 root_dup_2 1.0000 
+skin 711 root_dup_2 0.7073 joint_13 0.2927 
+skin 712 root_dup_2 1.0000 
+skin 713 root_dup_0 0.4179 root_dup_1 0.3251 root_dup_2 0.2569 
+skin 714 root_dup_0 0.2710 root_dup_2 0.7290 
+skin 715 root_dup_2 0.7005 joint_13 0.2995 
+skin 716 root_dup_2 0.6765 joint_13 0.3235 
+skin 717 root_dup_0 0.6968 root_dup_1 0.3032 
+skin 718 root_dup_1 1.0000 
+skin 719 root_dup_0 0.4379 joint_0 0.5621 
+skin 720 root_dup_0 1.0000 
+skin 721 root_dup_1 1.0000 
+skin 722 joint_0 1.0000 
+skin 723 root_dup_1 0.3054 root_dup_3 0.6946 
+skin 724 root_dup_1 1.0000 
+skin 725 root_dup_2 0.6032 joint_13 0.3968 
+skin 726 joint_13 0.7400 joint_11 0.2600 
+skin 727 root_dup_0 1.0000 
+skin 728 joint_0 1.0000 
+skin 729 joint_0 1.0000 
+skin 730 root_dup_0 0.3184 root_dup_1 0.2157 joint_0 0.4659 
+skin 731 joint_0 1.0000 
+skin 732 joint_0 1.0000 
+skin 733 joint_0 1.0000 
+skin 734 joint_0 0.7101 joint_5 0.2899 
+skin 735 joint_0 1.0000 
+skin 736 joint_0 1.0000 
+skin 737 joint_0 1.0000 
+skin 738 root_dup_1 1.0000 
+skin 739 root_dup_1 1.0000 
+skin 740 joint_19 1.0000 
+skin 741 root_dup_2 0.5307 joint_13 0.4693 
+skin 742 root_dup_0 0.4449 root_dup_2 0.3962 joint_13 0.1589 
+skin 743 joint_8 0.3572 joint_9_dup_2 0.6428 
+skin 744 root_dup_2 0.4155 joint_13 0.4323 joint_11 0.1522 
+skin 745 root_dup_2 0.3119 joint_13 0.4940 joint_11 0.1941 
+skin 746 root_dup_2 0.2497 joint_13 0.5146 joint_11 0.2357 
+skin 747 root_dup_2 0.4787 joint_13 0.5213 
+skin 748 root_dup_2 0.2917 joint_13 0.5109 joint_11 0.1974 
+skin 749 joint_10 1.0000 
+skin 750 joint_8 0.3225 joint_9_dup_0 0.6775 
+skin 751 root_dup_1 0.3087 joint_8 0.4697 joint_9_dup_2 0.2215 
+skin 752 joint_9_dup_2 1.0000 
+skin 753 joint_9_dup_2 1.0000 
+skin 754 root_dup_1 1.0000 
+skin 755 root_dup_1 1.0000 
+skin 756 root_dup_1 1.0000 
+skin 757 root_dup_1 1.0000 
+skin 758 joint_8 1.0000 
+skin 759 joint_8 0.4645 joint_9_dup_2 0.5355 
+skin 760 joint_19 1.0000 
+skin 761 root_dup_1 0.6131 joint_8 0.3869 
+skin 762 root_dup_1 0.6737 joint_8 0.3263 
+skin 763 root_dup_1 0.5595 joint_8 0.4405 
+skin 764 root_dup_1 0.5894 joint_8 0.4106 
+skin 765 root_dup_1 1.0000 
+skin 766 root_dup_1 0.6089 joint_8 0.3911 
+skin 767 root_dup_1 0.5950 joint_8 0.4050 
+skin 768 root_dup_1 0.6695 joint_8 0.3305 
+skin 769 root_dup_1 0.5565 joint_8 0.4435 
+skin 770 root_dup_1 1.0000 
+skin 771 root_dup_1 0.6225 joint_8 0.3775 
+skin 772 root_dup_1 1.0000 
+skin 773 root_dup_1 1.0000 
+skin 774 root_dup_1 0.6851 joint_8 0.3149 
+skin 775 root_dup_1 1.0000 
+skin 776 joint_19 1.0000 
+skin 777 root_dup_1 0.2037 root_dup_3 0.2506 joint_14 0.5457 
+skin 778 joint_19 1.0000 
+skin 779 joint_19 1.0000 
+skin 780 joint_14 1.0000 
+skin 781 joint_19 0.4855 joint_18 0.5145 
+skin 782 joint_17 0.5713 joint_16 0.4287 
+skin 783 joint_17 0.3834 joint_16 0.6166 
+skin 784 joint_17 0.3583 joint_16 0.6417 
+skin 785 joint_9_dup_2 0.2801 joint_17 0.7199 
+skin 786 joint_17 0.5225 joint_16 0.4775 
+skin 787 joint_9_dup_2 0.2504 joint_10 0.1677 joint_17 0.4025 joint_16 0.1793 
+skin 788 joint_9_dup_2 0.2958 joint_17 0.7042 
+skin 789 joint_17 0.3408 joint_16 0.6592 
+skin 790 joint_17 0.6307 joint_16 0.3693 
+skin 791 joint_17 0.4188 joint_16 0.5812 
+skin 792 joint_17 0.4323 joint_16 0.5677 
+skin 793 joint_17 0.3214 joint_16 0.6786 
+skin 794 joint_17 0.2615 joint_16 0.7385 
+skin 795 joint_17 0.3215 joint_16 0.6785 
+skin 796 joint_17 0.5757 joint_16 0.4243 
+skin 797 joint_10 1.0000 
+skin 798 joint_10 1.0000 
+skin 799 joint_10 1.0000 
+skin 800 joint_9_dup_0 0.1869 joint_3 0.5301 joint_2 0.2830 
+skin 801 joint_5 1.0000 
+skin 802 joint_9_dup_1 0.1185 joint_9_dup_2 0.3208 joint_10 0.3019 joint_17 0.2588 
+skin 803 joint_2 1.0000 
+skin 804 joint_9_dup_1 0.1924 joint_9_dup_2 0.4887 joint_10 0.3188 
+skin 805 joint_2 1.0000 
+skin 806 joint_10 1.0000 
+skin 807 joint_2 1.0000 
+skin 808 joint_9_dup_1 0.3181 joint_9_dup_2 0.6819 
+skin 809 joint_9_dup_1 0.3622 joint_9_dup_2 0.2035 joint_10 0.4343 
+skin 810 joint_2 1.0000 
+skin 811 joint_2 0.6647 joint_1 0.3353 
+skin 812 joint_2 0.7027 joint_1 0.2973 
+skin 813 joint_19 0.4353 joint_18 0.5647 
+skin 814 joint_19 0.5536 joint_18 0.4464 
+skin 815 joint_9_dup_2 1.0000 
+skin 816 joint_2 1.0000 
+skin 817 joint_2 1.0000 
+skin 818 joint_10 1.0000 
+skin 819 joint_10 1.0000 
+skin 820 joint_8 0.5512 joint_9_dup_2 0.4488 
+skin 821 joint_8 0.5305 joint_9_dup_0 0.4695 
+skin 822 root_dup_1 0.4359 joint_8 0.5641 
+skin 823 root_dup_1 0.3537 joint_8 0.6463 
+skin 824 root_dup_1 0.3982 joint_8 0.6018 
+skin 825 root_dup_1 0.3312 joint_8 0.6688 
+skin 826 root_dup_1 0.3989 joint_8 0.6011 
+skin 827 root_dup_1 0.3282 joint_8 0.6718 
+skin 828 root_dup_1 0.4298 joint_8 0.5702 
+skin 829 joint_19 0.6726 joint_18 0.3274 
+skin 830 joint_19 1.0000 
+skin 831 joint_5 1.0000 
+skin 832 joint_9_dup_0 0.7246 joint_9_dup_1 0.2754 
+skin 833 joint_9_dup_0 0.2087 joint_9_dup_1 0.2606 joint_10 0.5307 
+skin 834 joint_9_dup_0 1.0000 
+skin 835 joint_9_dup_0 0.3827 joint_3 0.2212 joint_10 0.3962 
+skin 836 joint_14 1.0000 
+skin 837 joint_10 1.0000 
+skin 838 joint_10 1.0000 
+skin 839 joint_10 1.0000 
+skin 840 joint_0 1.0000 
+skin 841 joint_0 1.0000 
+skin 842 joint_10 1.0000 
+skin 843 joint_10 1.0000 
+skin 844 joint_10 0.7025 joint_6 0.2975 
+skin 845 joint_10 1.0000 
+skin 846 joint_10 1.0000 
+skin 847 joint_10 1.0000 
+skin 848 joint_10 1.0000 
+skin 849 joint_10 1.0000 
+skin 850 joint_10 1.0000 
+skin 851 joint_10 1.0000 
+skin 852 joint_10 0.6997 joint_6 0.3003 
+skin 853 joint_9_dup_0 0.1872 joint_3 0.3700 joint_10 0.4428 
+skin 854 joint_5 0.6880 joint_4 0.3120 
+skin 855 joint_5 0.6429 joint_4 0.3571 
+skin 856 joint_3 0.4235 joint_2 0.5765 
+skin 857 joint_3 0.4626 joint_2 0.5374 
+skin 858 joint_1 1.0000 
+skin 859 root_dup_3 0.2844 joint_14 0.7156 
+skin 860 joint_3 0.6401 joint_2 0.3599 
+skin 861 joint_3 0.6214 joint_2 0.3786 
+skin 862 joint_3 0.4763 joint_2 0.5237 
+skin 863 joint_3 0.4279 joint_2 0.5721 
+skin 864 joint_3 0.4271 joint_2 0.5729 
+skin 865 joint_3 0.4526 joint_2 0.5474 
+skin 866 joint_10 0.3850 joint_6 0.6150 
+skin 867 joint_10 0.5133 joint_6 0.4867 
+skin 868 joint_10 0.5405 joint_6 0.4595 
+skin 869 joint_2 0.3133 joint_1 0.6867 
+skin 870 joint_2 0.2935 joint_1 0.7065 
+skin 871 joint_14 1.0000 
+skin 872 joint_14 1.0000 
+skin 873 joint_14 1.0000 
+skin 874 joint_14 1.0000 
+skin 875 joint_14 1.0000 
+skin 876 joint_14 1.0000 
+skin 877 joint_14 1.0000 
+skin 878 joint_14 1.0000 
+skin 879 joint_14 1.0000 
+skin 880 joint_14 1.0000 
+skin 881 joint_10 0.6054 joint_6 0.3946 
+skin 882 joint_1 1.0000 
+skin 883 joint_1 1.0000 
+skin 884 joint_11 1.0000 
+skin 885 joint_11 0.6841 joint_7 0.3159 
+skin 886 joint_11 1.0000 
+skin 887 joint_11 0.6944 joint_7 0.3056 
+skin 888 joint_13 0.2654 joint_11 0.7346 
+skin 889 joint_11 1.0000 
+skin 890 joint_13 0.3302 joint_11 0.6698 
+skin 891 joint_11 1.0000 
+skin 892 joint_11 1.0000 
+skin 893 joint_11 1.0000 
+skin 894 joint_11 0.6567 joint_7 0.3433 
+skin 895 joint_16 0.2763 joint_15 0.7237 
+skin 896 joint_11 1.0000 
+skin 897 joint_16 0.4429 joint_15 0.5571 
+skin 898 joint_16 0.4036 joint_15 0.5964 
+skin 899 joint_13 0.2678 joint_11 0.7322 
+skin 900 joint_13 0.2623 joint_11 0.7377 
+skin 901 joint_13 0.4492 joint_11 0.5508 
+skin 902 joint_13 0.4413 joint_11 0.5587 
+skin 903 joint_13 0.4447 joint_11 0.5553 
+skin 904 joint_13 0.5498 joint_11 0.4502 
+skin 905 joint_13 0.4575 joint_11 0.5425 
+skin 906 joint_13 0.4911 joint_11 0.5089 
+skin 907 joint_13 0.5282 joint_11 0.4718 
+skin 908 joint_13 0.5521 joint_11 0.4479 
+skin 909 joint_10 0.6636 joint_6 0.3364 
+skin 910 joint_10 0.6716 joint_6 0.3284 
+skin 911 joint_10 0.6865 joint_6 0.3135 
+skin 912 joint_10 0.6768 joint_6 0.3232 
+skin 913 joint_10 0.5750 joint_6 0.4250 
+skin 914 joint_10 0.4498 joint_6 0.5502 
+skin 915 joint_10 0.4756 joint_6 0.5244 
+skin 916 joint_10 0.5344 joint_6 0.4656 
+skin 917 joint_10 0.4988 joint_6 0.5012 
+skin 918 joint_10 0.6849 joint_6 0.3151 
+skin 919 joint_10 0.6204 joint_6 0.3796 
+skin 920 joint_10 0.4871 joint_6 0.5129 
+skin 921 joint_10 0.3821 joint_6 0.6179 
+skin 922 joint_10 0.3825 joint_6 0.6175 
+skin 923 joint_6 1.0000 
+skin 924 joint_10 0.6554 joint_6 0.3446 
+skin 925 joint_10 0.4336 joint_6 0.5664 
+skin 926 joint_10 0.3441 joint_6 0.6559 
+skin 927 joint_10 0.4732 joint_6 0.5268 
+skin 928 joint_10 0.5179 joint_6 0.4821 
+skin 929 joint_10 0.5380 joint_6 0.4620 
+skin 930 joint_10 0.4260 joint_6 0.5740 
+skin 931 joint_10 0.4976 joint_6 0.5024 
+skin 932 joint_10 0.4456 joint_6 0.5544 
+skin 933 joint_10 0.3330 joint_6 0.6670 
+skin 934 joint_10 0.5259 joint_6 0.4741 
+hier root root_dup_0
+hier root root_dup_1
+hier root root_dup_2
+hier root root_dup_3
+hier root_dup_0 joint_0
+hier root_dup_1 joint_8
+hier root_dup_2 joint_13
+hier root_dup_3 joint_14
+hier joint_0 joint_5
+hier joint_8 joint_9
+hier joint_13 joint_11
+hier joint_14 joint_19
+hier joint_5 joint_4
+hier joint_9 joint_9_dup_0
+hier joint_9 joint_9_dup_1
+hier joint_9 joint_9_dup_2
+hier joint_11 joint_7
+hier joint_19 joint_18
+hier joint_9_dup_0 joint_3
+hier joint_9_dup_1 joint_10
+hier joint_9_dup_2 joint_17
+hier joint_3 joint_2
+hier joint_10 joint_6
+hier joint_17 joint_16
+hier joint_2 joint_1
+hier joint_16 joint_15
