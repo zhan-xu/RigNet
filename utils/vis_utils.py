@@ -61,13 +61,13 @@ def show_obj_skel(mesh_name, root):
             next_level+=p_node.children
         this_level = next_level
 
-    param = o3d.io.read_pinhole_camera_parameters('sideview.json')
-    ctr.convert_from_pinhole_camera_parameters(param)
+    #param = o3d.io.read_pinhole_camera_parameters('sideview.json')
+    #ctr.convert_from_pinhole_camera_parameters(param)
 
-    #vis.run()
-    vis.update_geometry()
-    vis.poll_events()
-    vis.update_renderer()
+    vis.run()
+    #vis.update_geometry()
+    #vis.poll_events()
+    #vis.update_renderer()
 
     #param = ctr.convert_to_pinhole_camera_parameters()
     #o3d.io.write_pinhole_camera_parameters('sideview.json', param)
