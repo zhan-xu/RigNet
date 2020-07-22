@@ -1,9 +1,11 @@
 #-------------------------------------------------------------------------------
-# © 2019-2020  Zhan Xu
 # Name:        skin_dataset.py
 # Purpose:     torch_geometric dataset wrapper for skinning training and inference
-# Licence:     GNU General Public License v3
+# RigNet Copyright 2020 University of Massachusetts
+# RigNet is made available under General Public License Version 3 (GPLv3), or under a Commercial License.
+# Please see the LICENSE README.txt file in the main directory for more information and instruction on using and licensing RigNet.
 #-------------------------------------------------------------------------------
+
 import os
 import torch
 import numpy as np
