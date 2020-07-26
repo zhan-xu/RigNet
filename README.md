@@ -12,7 +12,7 @@ conda create -n rignet python=3.6
 Some necessary libraries include:
 
 ```
-pip install numpy scipy matplotlib tensorboard opencv-python trimesh[easy] open3d=0.9.0
+pip install numpy scipy matplotlib tensorboard opencv-python trimesh[easy] open3d==0.9.0
 pip install torch==1.3.0+cu100 torchvision==0.4.1+cu100 -f https://download.pytorch.org/whl/torch_stable.html
 pip install --no-cache-dir torch-scatter==1.4.0
 pip install --no-cache-dir torch-sparse==0.4.0
