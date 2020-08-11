@@ -91,15 +91,16 @@ class Info:
 
     def normalize(self, scale, trans):
         for k, v in self.joint_pos.items():
-            v /= scale
-            v -= trans[0, :]
+            self.joint_pos[k] /= scale
+            self.joint_pos[k] -= trans
+
 
         this_level = [self.root]
         while this_level:
             next_level = []
             for node in this_level:
                 node.pos /= scale
-                node.pos = (node.pos[0] - trans[0, 0], node.pos[1] - trans[0, 1], node.pos[2] - trans[0, 2])
+                node.pos = (node.pos[0] - trans[0], node.pos[1] - trans[1], node.pos[2] - trans[2])
                 for ch in node.children:
                     next_level.append(ch)
             this_level = next_level
@@ -205,7 +206,7 @@ class Skel:
             next_level = []
             for node in this_level:
                 node.pos /= scale
-                node.pos = (node.pos[0] - trans[0, 0], node.pos[1] - trans[0, 1], node.pos[2] - trans[0, 2])
+                node.pos = (node.pos[0] - trans[0], node.pos[1] - trans[1], node.pos[2] - trans[2])
                 for ch in node.children:
                     next_level.append(ch)
             this_level = next_level

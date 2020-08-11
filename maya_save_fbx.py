@@ -81,11 +81,12 @@ def getGeometryGroups():
     
     
 if __name__ == '__main__':
-    model_id = 17872
+    #model_id = "17872"
+    model_id = "smith"
     print(model_id)
-    obj_name = 'D:\\{:d}_ori.obj'.format(model_id)
-    info_name = 'D:\\{:d}_ori_rig.txt'.format(model_id)
-    out_name = 'D:\\{:d}.fbx'.format(model_id)
+    obj_name = 'D:\\{:s}_ori.obj'.format(model_id)
+    info_name = 'D:\\{:s}_ori_rig.txt'.format(model_id)
+    out_name = 'D:\\{:s}.fbx'.format(model_id)
        
     # import obj
     cmds.file(new=True,force=True)
