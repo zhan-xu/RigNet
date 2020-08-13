@@ -206,7 +206,7 @@ def predict_skeleton(input_data, vox, root_pred_net, bone_pred_net, mesh_filenam
     return pred_skel
 
 
-def calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename):
+def calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename, subsampling=False):
     """
     calculate volumetric geodesic distance from vertices to each bones
     :param bones: B*6 numpy array where each row stores the starting and ending joint position of a bone
@@ -215,12 +215,22 @@ def calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename):
     :param mesh_filename: mesh filename
     :return: an approaximate volumetric geodesic distance matrix V*B, were (v,b) is the distance from vertex v to bone b
     """
-    mesh_trimesh = trimesh.load(mesh_filename)
-    origins, ends, pts_bone_dist = pts2line(mesh_v, bones)
-    pts_bone_visibility = calc_pts2bone_visible_mat(mesh_trimesh, origins, ends)
-    pts_bone_visibility = pts_bone_visibility.reshape(len(bones), len(mesh_v)).transpose()
-    pts_bone_dist = pts_bone_dist.reshape(len(bones), len(mesh_v)).transpose()
 
+    if subsampling:
+        mesh0 = o3d.io.read_triangle_mesh(mesh_filename)
+        mesh0 = mesh0.simplify_quadric_decimation(3000)
+        o3d.io.write_triangle_mesh(mesh_filename.replace(".obj", "_simplified.obj"), mesh0)
+        mesh_trimesh = trimesh.load(mesh_filename.replace(".obj", "_simplified.obj"))
+        subsamples_ids = np.random.choice(len(mesh_v), np.min((len(mesh_v), 1500)), replace=False)
+        subsamples = mesh_v[subsamples_ids, :]
+        surface_geodesic = surface_geodesic[subsamples_ids, :][:, subsamples_ids]
+    else:
+        mesh_trimesh = trimesh.load(mesh_filename)
+        subsamples = mesh_v
+    origins, ends, pts_bone_dist = pts2line(subsamples, bones)
+    pts_bone_visibility = calc_pts2bone_visible_mat(mesh_trimesh, origins, ends)
+    pts_bone_visibility = pts_bone_visibility.reshape(len(bones), len(subsamples)).transpose()
+    pts_bone_dist = pts_bone_dist.reshape(len(bones), len(subsamples)).transpose()
     # remove visible points which are too far
     for b in range(pts_bone_visibility.shape[1]):
         visible_pts = np.argwhere(pts_bone_visibility[:, b] == 1).squeeze(1)
@@ -244,6 +254,11 @@ def calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename):
                 visible_matrix[r, c] = 8.0 + pts_bone_dist[r, c]
             else:
                 visible_matrix[r, c] = dist1 + visible_matrix[nn_visible, c]
+    if subsampling:
+        nn_dist = np.sum((mesh_v[:, np.newaxis, :] - subsamples[np.newaxis, ...])**2, axis=2)
+        nn_ind = np.argmin(nn_dist, axis=1)
+        visible_matrix = visible_matrix[nn_ind, :]
+        os.remove(mesh_filename.replace(".obj", "_simplified.obj"))
     return visible_matrix
 
 
@@ -262,7 +277,7 @@ def predict_skinning(input_data, pred_skel, skin_pred_net, surface_geodesic, mes
     bones, bone_names, bone_isleaf = get_bones(pred_skel)
     mesh_v = input_data.pos.data.cpu().numpy()
     print("     calculating volumetric geodesic distance from vertices to bone. This step takes some time...")
-    geo_dist = calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename)
+    geo_dist = calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename, subsampling=False)
     input_samples = []  # joint_pos (x, y, z), (bone_id, 1/D)*5
     loss_mask = []
     skin_nn = []
