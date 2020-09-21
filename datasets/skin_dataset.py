@@ -53,7 +53,7 @@ class SkinDataset(InMemoryDataset):
                 loss_mask = []
                 for i in range(self.num_nearest_bone):
                     if int(words[3 * i + 1]) == -1:
-                        ## go around. words[3] may be also invalid.
+                        ## walk-round. however words[3] may also be invalid.
                         sample_nearest_bone_ids.append(int(words[1]))
                         sample_input += bones[int(words[1])]
                         sample_input.append(words[2])
@@ -86,7 +86,6 @@ class SkinDataset(InMemoryDataset):
         for v_filename in self.raw_paths:
             print('preprecessing data complete: {:.4f}%'.format(100 * i / len(self.raw_paths)))
             i += 1.0
-            name = int(v_filename.split('/')[-1].split('_')[0])
             v = np.loadtxt(v_filename)
             v = torch.from_numpy(v).float()
             tpl_e = np.loadtxt(v_filename.replace('_v.txt', '_tpl_e.txt')).T

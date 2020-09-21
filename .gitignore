@@ -11,3 +11,5 @@ checkpoints/
 *.err
 *.sh
 sideview.json
+quick_start/*.binvox
+quick_start/*_normalized*

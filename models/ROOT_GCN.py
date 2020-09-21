@@ -112,32 +112,25 @@ class ROOTNET(torch.nn.Module):
         self.back_layers = Sequential(MLP([128 + 128, 200, 64]), Linear(64, 1))
 
     def forward(self, data, shuffle=True):
-        joints_norepeat = []
-        joints_batch = []
         joints_label = []
-        joints = data.y
-        for i in range(len(torch.unique(data.batch))):
-            joint_sample = joints[data.batch == i, :]
-            joint_sample = joint_sample[:data.num_joint[i], :]
-            # create ground-truth label. The first one is always the root
-            joint_label = joint_sample.new(torch.Size((joint_sample.shape[0], 1))).zero_()
-            joint_label[0, 0] = 1
+        joints_shuffle = []
+        for i in range(len(torch.unique(data.joints_batch))):
+            joint_i = data.joints[data.joints_batch==i]
+            label_i = joint_i.new(torch.Size((joint_i.shape[0], 1))).zero_()
+            label_i[0, 0] = 1
             # random shuffle
             if shuffle:
-                idx = torch.randperm(joint_label.nelement())
-                joint_label = joint_label[idx]
-                joint_sample = joint_sample[idx]
-            # add to the batch
-            joints_norepeat.append(joint_sample)
-            joints_label.append(joint_label)
-            joints_batch.append(data.batch.new_full((data.num_joint[i],), i))
-        joints_norepeat = torch.cat(joints_norepeat, dim=0)
-        joints_batch = torch.cat(joints_batch)
+                idx = torch.randperm(label_i.nelement())
+                label_i = label_i[idx]
+                joint_i = joint_i[idx]
+            joints_shuffle.append(joint_i)
+            joints_label.append(label_i)
+        joints_shuffle = torch.cat(joints_shuffle, dim=0)
         joints_label = torch.cat(joints_label)
 
         x_glb_shape = self.shape_encoder(data)
-        shape_feature = torch.repeat_interleave(x_glb_shape, torch.bincount(joints_batch), dim=0)
-        joint_feature = self.joint_encoder(torch.abs(joints_norepeat[:, 0:1]), joints_norepeat, joints_batch)
+        shape_feature = torch.repeat_interleave(x_glb_shape, torch.bincount(data.joints_batch), dim=0)
+        joint_feature = self.joint_encoder(torch.abs(joints_shuffle[:,0:1]), joints_shuffle, data.joints_batch)
         x_joint = torch.cat([shape_feature, joint_feature], dim=1)
         x_joint = self.back_layers(x_joint)
         return x_joint, joints_label

@@ -84,13 +84,13 @@ class JointEncoder(torch.nn.Module):
         self.sa2_module_joints = SAModule(0.33, 0.6, MLP([128 + 3, 128, 128, 256]))
         self.sa3_module_joints = GlobalSAModule(MLP([256 + 3, 256, 256, 512, 256, 128]))
 
-    def forward(self, joints_norepeat, joints_batch):
+    def forward(self, joints, joints_batch):
         '''x1 = self.mlp_1(joints_norepeat)
         x_glb, _ = scatter_max(x1, joints_batch, dim=0)
         x_glb = self.mlp_2(x_glb)
         return x_glb'''
 
-        sa0_joints = (None, joints_norepeat, joints_batch)
+        sa0_joints = (None, joints, joints_batch)
         sa1_joints = self.sa1_module_joints(*sa0_joints)
         sa2_joints = self.sa2_module_joints(*sa1_joints)
         sa3_joints = self.sa3_module_joints(*sa2_joints)
@@ -107,45 +107,21 @@ class PairCls(torch.nn.Module):
         input_concat_dim = 448
         self.mix_transform = Sequential(MLP([input_concat_dim, 128, 64]), Dropout(0.7), Linear(64, 1))
 
-    def forward(self, data):
-        joints = data.y
-        joints_norepeat = []
-        joints_batch = []
-        joints_sample_1 = []
-        joints_sample_2 = []
-        pair_batch = []
-        label = []
-        accumulate_start_pair = 0
-        for i in range(len(torch.unique(data.batch))):
-            joints_sample = joints[data.batch == i, :]
-            joints_sample = joints_sample[:data.num_joint[i], :]
-            joints_norepeat.append(joints_sample)
-            joints_batch.append(data.batch.new_full((data.num_joint[i],), i))
-            pair_idx = data.pairs[accumulate_start_pair: accumulate_start_pair + data.num_pair[i]]
-            accumulate_start_pair += data.num_pair[i]
-
-            if np.random.uniform() > 0.5:
-                joints_sample_1.append(joints_sample[pair_idx[:, 0].long()])
-                joints_sample_2.append(joints_sample[pair_idx[:, 1].long()])
-            else:
-                joints_sample_1.append(joints_sample[pair_idx[:, 1].long()])
-                joints_sample_2.append(joints_sample[pair_idx[:, 0].long()])
-            pair_batch.append(data.batch.new_full((data.num_pair[i],), i))
-            label.append(pair_idx[:, -1])
-        joints_norepeat = torch.cat(joints_norepeat, dim=0)
-        joints_batch = torch.cat(joints_batch).long()
-        pair_batch = torch.cat(pair_batch).long()
-        joints_sample_1 = torch.cat(joints_sample_1, dim=0)
-        joints_sample_2 = torch.cat(joints_sample_2, dim=0)
-        label = torch.cat(label, dim=0).unsqueeze(1)
-
-        joints_pair = torch.cat((joints_sample_1, joints_sample_2, data.pairs[:, 2:4]), dim=1)
-        pair_feature = self.expand_joint_feature(joints_pair)
-        joint_feature = self.joint_encoder(joints_norepeat, joints_batch)
-        joint_feature = torch.repeat_interleave(joint_feature, torch.bincount(pair_batch), dim=0)
+    def forward(self, data, permute_joints=True):
+        joint_feature = self.joint_encoder(data.joints, data.joints_batch)
+        joint_feature = torch.repeat_interleave(joint_feature, torch.bincount(data.pairs_batch), dim=0)
         shape_feature = self.shape_encoder(data)
-        shape_feature = torch.repeat_interleave(shape_feature, torch.bincount(pair_batch), dim=0)
-        pair_feature = torch.cat((shape_feature, joint_feature, pair_feature), dim=1)
+        shape_feature = torch.repeat_interleave(shape_feature, torch.bincount(data.pairs_batch), dim=0)
 
+        if permute_joints:
+            rand_permute = (torch.rand(len(data.pairs))>=0.5).long().to(data.pairs.device)
+            joints_pair = torch.cat((data.joints[torch.gather(data.pairs, dim=1, index=rand_permute.unsqueeze(dim=1)).squeeze(dim=1).long()],
+                                     data.joints[torch.gather(data.pairs, dim=1, index=1-rand_permute.unsqueeze(dim=1)).squeeze(dim=1).long()],
+                                     data.pair_attr[:, :-1]), dim=1)
+        else:
+            joints_pair = torch.cat((data.joints[data.pairs[:,0].long()], data.joints[data.pairs[:,1].long()], data.pair_attr[:, :-1]), dim=1)
+        pair_feature = self.expand_joint_feature(joints_pair)
+        pair_feature = torch.cat((shape_feature, joint_feature, pair_feature), dim=1)
         pre_label = self.mix_transform(pair_feature)
-        return pre_label, label
+        gt_label = data.pair_attr[:, -1].unsqueeze(1)
+        return pre_label, gt_label

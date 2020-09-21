@@ -26,15 +26,6 @@ from utils.log_utils import AverageMeter
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def adjust_learning_rate(optimizer, epoch, lr, schedule, gamma):
-    """Sets the learning rate to the initial LR decayed by schedule"""
-    if epoch in schedule:
-        lr *= gamma
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = param_group['lr']*gamma
-    return lr
-
-
 def save_checkpoint(state, is_best, checkpoint='checkpoint', filename='checkpoint.pth.tar', snapshot=None):
     filepath = os.path.join(checkpoint, filename)
     torch.save(state, filepath)
@@ -80,9 +71,9 @@ def main(args):
 
     cudnn.benchmark = True
     print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters()) / 1000000.0))
-    train_loader = DataLoader(GraphDataset(root=args.train_folder), batch_size=args.train_batch, shuffle=True)
-    val_loader = DataLoader(GraphDataset(root=args.val_folder), batch_size=args.test_batch, shuffle=False)
-    test_loader = DataLoader(GraphDataset(root=args.test_folder), batch_size=args.test_batch, shuffle=False)
+    train_loader = DataLoader(GraphDataset(root=args.train_folder), batch_size=args.train_batch, shuffle=True, follow_batch=['joints', 'pairs'])
+    val_loader = DataLoader(GraphDataset(root=args.val_folder), batch_size=args.test_batch, shuffle=False, follow_batch=['joints', 'pairs'])
+    test_loader = DataLoader(GraphDataset(root=args.test_folder), batch_size=args.test_batch, shuffle=False, follow_batch=['joints', 'pairs'])
 
     if args.evaluate:
         print('\nEvaluation only')
@@ -90,17 +81,18 @@ def main(args):
         print('test_loss {:8f}'.format(test_loss))
         return
 
-    lr = args.lr
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, args.schedule, gamma=args.gamma)
     logger = SummaryWriter(log_dir=args.logdir)
     for epoch in range(args.start_epoch, args.epochs):
-        print('\nEpoch: %d | LR: %.8f' % (epoch + 1, lr))
-        lr = adjust_learning_rate(optimizer, epoch, lr, args.schedule, args.gamma)
+        lr = scheduler.get_last_lr()
+        print('\nEpoch: %d | LR: %.8f' % (epoch + 1, lr[0]))
         train_loss = train(train_loader, model, optimizer, args)
         val_loss = test(val_loader, model, args)
         test_loss = test(test_loader, model, args, best_epoch=epoch+1)
-        print('Epoch{:d}. train_loss: {:.6f}.'.format(epoch, train_loss))
-        print('Epoch{:d}. val_loss: {:.6f}.'.format(epoch, val_loss))
-        print('Epoch{:d}. test_loss: {:.6f}.'.format(epoch, test_loss))
+        scheduler.step()
+        print('Epoch{:d}. train_loss: {:.6f}.'.format(epoch + 1, train_loss))
+        print('Epoch{:d}. val_loss: {:.6f}.'.format(epoch + 1, val_loss))
+        print('Epoch{:d}. test_loss: {:.6f}.'.format(epoch + 1, test_loss))
 
         # remember best acc and save checkpoint
         is_best = val_loss < lowest_loss
@@ -129,15 +121,13 @@ def train(train_loader, model, optimizer, args):
         data = data.to(device)
         optimizer.zero_grad()
         pre_label, label = model(data)
-
         loss1 = torch.nn.functional.binary_cross_entropy_with_logits(pre_label, label, reduction='none')
         topk_val, _ = torch.topk(loss1.view(-1), k=int(args.topk * len(pre_label)), dim=0, sorted=False)
         loss2 = topk_val.mean()
         loss = loss1.mean() + loss2
-
         loss.backward()
         optimizer.step()
-        loss_meter.update(loss.item(), n=len(torch.unique(data.batch)))
+        loss_meter.update(loss.item())
     return loss_meter.avg
 
 
@@ -145,7 +135,7 @@ def test(test_loader, model, args, save_result=False, best_epoch=None):
     global device
     model.eval()  # switch to test mode
     if save_result:
-        output_folder = 'results/{:s}/best_{:d}/'.format(args.checkpoint.split('/')[1], best_epoch)
+        output_folder = 'results/{:s}/best_{:d}/'.format(args.checkpoint.split('/')[-1], best_epoch)
         if not os.path.exists(output_folder):
             mkdir_p(output_folder)
     loss_meter = AverageMeter()
@@ -156,18 +146,19 @@ def test(test_loader, model, args, save_result=False, best_epoch=None):
             loss = torch.nn.functional.binary_cross_entropy_with_logits(pre_label, label.float())
             if save_result:
                 connect_prob = torch.sigmoid(pre_label)
-                accumulate_start_id = 0
+                acc_joints = 0
                 for i in range(len(torch.unique(data.batch))):
-                    pair_idx = data.pairs[accumulate_start_id: accumulate_start_id+data.num_pair[i]].long()
-                    connect_prob_i = connect_prob[accumulate_start_id: accumulate_start_id+data.num_pair[i]]
-                    accumulate_start_id += data.num_pair[i]
-                    cost_matrix = np.zeros((data.num_joint[i], data.num_joint[i]))
-                    pair_idx = pair_idx.data.cpu().numpy()
-                    cost_matrix[pair_idx[:, 0], pair_idx[:, 1]] = connect_prob_i.data.cpu().numpy().squeeze()
+                    pair_idx = data.pairs[data.pairs_batch==i].long()
+                    connect_prob_i = connect_prob[data.pairs_batch==i]
+                    num_joint = len(data.joints[data.joints_batch==i])
+                    cost_matrix = np.zeros((num_joint, num_joint))
+                    pair_idx = pair_idx.to("cpu").numpy()
+                    cost_matrix[pair_idx[:, 0]-acc_joints, pair_idx[:, 1]-acc_joints] = connect_prob_i.data.cpu().numpy().squeeze(axis=1)
                     cost_matrix = 1 - cost_matrix
                     print('saving: {:s}'.format(str(data.name[i].item()) + '_cost.npy'))
                     np.save(os.path.join(output_folder, str(data.name[i].item()) + '_cost.npy'), cost_matrix)
-            loss_meter.update(loss.item(), n=len(torch.unique(data.batch)))
+                    acc_joints += num_joint
+            loss_meter.update(loss.item())
     return loss_meter.avg
 
 
@@ -185,20 +176,19 @@ if __name__ == '__main__':
     parser.add_argument('--schedule', type=int, nargs='+', default=[200], help='Decrease learning rate at these epochs.')
     parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
     ####################################################################################################################
-    parser.add_argument('--train-batch', default=2, type=int, metavar='N', help='train batchsize')
-    parser.add_argument('--test-batch', default=2, type=int, metavar='N', help='test batchsize')
+    parser.add_argument('--train_batch', default=2, type=int, metavar='N', help='train batchsize')
+    parser.add_argument('--test_batch', default=2, type=int, metavar='N', help='test batchsize')
     parser.add_argument('-c', '--checkpoint', default='checkpoints/connect_test', type=str, metavar='PATH',
                         help='path to save checkpoint (default: checkpoint)')
     parser.add_argument('--logdir', default='logs/connect_test', type=str, metavar='LOG', help='directory to save logs')
     parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
-    parser.add_argument('--train_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/train/',
+    parser.add_argument('--train_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/train/',
                         type=str, help='folder of training data')
-    parser.add_argument('--val_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/val/',
+    parser.add_argument('--val_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/val/',
                         type=str, help='folder of validation data')
-    parser.add_argument('--test_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/test/',
+    parser.add_argument('--test_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/test/',
                         type=str, help='folder of testing data')
 
     parser.add_argument('--topk', default=0.3, type=float, help='topk ratio for ohem')
-    parser.add_argument('--pos_weight', default=1.0, type=float, help='weight for positive class')
     print(parser.parse_args())
     main(parser.parse_args())

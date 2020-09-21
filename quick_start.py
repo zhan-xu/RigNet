@@ -10,6 +10,7 @@ import os
 import trimesh
 import numpy as np
 import open3d as o3d
+import itertools as it
 
 import torch
 from torch_geometric.data import Data
@@ -86,8 +87,7 @@ def create_single_data(mesh_filaname):
     geo_e, _ = add_self_loops(geo_e, num_nodes=v.size(0))
 
     # batch
-    batch = np.zeros(len(v))
-    batch = torch.from_numpy(batch).long()
+    batch = torch.zeros(len(v), dtype=torch.long)
 
     # voxel
     if not os.path.exists(mesh_filaname.replace('_remesh.obj', '_normalized.binvox')):
@@ -144,29 +144,28 @@ def predict_joints(input_data, vox, joint_pred_net, threshold, bandwidth=None, m
     #img = draw_shifted_pts(mesh_filename, pred_joints)
 
     # prepare and add new data members
-    num_joint = len(pred_joints)
-    pair_all = []
-    for joint1_id in range(len(pred_joints)):
-        for joint2_id in range(joint1_id + 1, len(pred_joints)):
-            dist = np.linalg.norm(pred_joints[joint1_id] - pred_joints[joint2_id])
-            bone_samples = sample_on_bone(pred_joints[joint1_id], pred_joints[joint2_id])
-            bone_samples_inside, _ = inside_check(bone_samples, vox)
-            outside_proportion = len(bone_samples_inside) / (len(bone_samples) + 1e-10)
-            pair = np.array([joint1_id, joint2_id, dist, outside_proportion, 1])
-            pair_all.append(pair)
-    pair_all = np.array(pair_all)
-    num_pair = len(pair_all)
-    pair_all = torch.from_numpy(pair_all).float()
-
-    if num_joint < len(input_data.pos):
-        pred_joints = np.tile(pred_joints, (round(1.0 * len(input_data.pos) / num_joint + 0.5), 1))
-    pred_joints = pred_joints[:len(input_data.pos), :]
+    pairs = list(it.combinations(range(pred_joints.shape[0]), 2))
+    pair_attr = []
+    for pr in pairs:
+        dist = np.linalg.norm(pred_joints[pr[0]] - pred_joints[pr[1]])
+        bone_samples = sample_on_bone(pred_joints[pr[0]], pred_joints[pr[1]])
+        bone_samples_inside, _ = inside_check(bone_samples, vox)
+        outside_proportion = len(bone_samples_inside) / (len(bone_samples) + 1e-10)
+        attr = np.array([dist, outside_proportion, 1])
+        pair_attr.append(attr)
+    pairs = np.array(pairs)
+    pair_attr = np.array(pair_attr)
+    pairs = torch.from_numpy(pairs).float()
+    pair_attr = torch.from_numpy(pair_attr).float()
     pred_joints = torch.from_numpy(pred_joints).float()
+    joints_batch = torch.zeros(len(pred_joints), dtype=torch.long)
+    pairs_batch = torch.zeros(len(pairs), dtype=torch.long)
 
-    input_data.y = pred_joints
-    input_data.num_joint = [num_joint]
-    input_data.pairs = pair_all
-    input_data.num_pair = [num_pair]
+    input_data.joints = pred_joints
+    input_data.pairs = pairs
+    input_data.pair_attr = pair_attr
+    input_data.joints_batch = joints_batch
+    input_data.pairs_batch = pairs_batch
     return input_data
 
 
@@ -181,13 +180,13 @@ def predict_skeleton(input_data, vox, root_pred_net, bone_pred_net, mesh_filenam
     :return: predicted skeleton structure
     """
     root_id = getInitId(input_data, root_pred_net)
-    pred_joints = input_data.y[:input_data.num_joint[0]].data.cpu().numpy()
+    pred_joints = input_data.joints.data.cpu().numpy()
 
     with torch.no_grad():
-        connect_prob, _ = bone_pred_net(input_data)
+        connect_prob, _ = bone_pred_net(input_data, permute_joints=False)
         connect_prob = torch.sigmoid(connect_prob)
     pair_idx = input_data.pairs.long().data.cpu().numpy()
-    prob_matrix = np.zeros((data.num_joint[0], data.num_joint[0]))
+    prob_matrix = np.zeros((len(input_data.joints), len(input_data.joints)))
     prob_matrix[pair_idx[:, 0], pair_idx[:, 1]] = connect_prob.data.cpu().numpy().squeeze()
     prob_matrix = prob_matrix + prob_matrix.transpose()
     cost_matrix = -np.log(prob_matrix + 1e-10)
@@ -262,7 +261,7 @@ def calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename, subsamp
     return visible_matrix
 
 
-def predict_skinning(input_data, pred_skel, skin_pred_net, surface_geodesic, mesh_filename):
+def predict_skinning(input_data, pred_skel, skin_pred_net, surface_geodesic, mesh_filename, subsampling=False):
     """
     predict skinning
     :param input_data: wrapped input data
@@ -277,7 +276,7 @@ def predict_skinning(input_data, pred_skel, skin_pred_net, surface_geodesic, mes
     bones, bone_names, bone_isleaf = get_bones(pred_skel)
     mesh_v = input_data.pos.data.cpu().numpy()
     print("     calculating volumetric geodesic distance from vertices to bone. This step takes some time...")
-    geo_dist = calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename, subsampling=False)
+    geo_dist = calc_geodesic_matrix(bones, mesh_v, surface_geodesic, mesh_filename, subsampling=subsampling)
     input_samples = []  # joint_pos (x, y, z), (bone_id, 1/D)*5
     loss_mask = []
     skin_nn = []
@@ -365,6 +364,11 @@ def tranfer_to_ori_mesh(filename_ori, filename_remesh, pred_rig):
 if __name__ == '__main__':
     input_folder = "quick_start/"
 
+    # downsample_skinning is used to speed up the calculation of volumetric geodesic distance
+    # and to save cpu memory in skinning calculation.
+    # Change to False to be more accurate but less efficient.
+    downsample_skinning = True
+
     # load all weights
     print("loading all networks...")
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -397,7 +401,7 @@ if __name__ == '__main__':
     skinNet.eval()
     print("     skinning prediction network loaded.")
 
-    # Here we provide 16 examples. For best results, we will need to override the learned bandwidth and its associated threshold
+    # Here we provide 16~17 examples. For best results, we will need to override the learned bandwidth and its associated threshold
     # To process other input characters, please first try the learned bandwidth (0.429 in the provided model), and the default threshold 1e-5.
     # We also use these two default parameters for processing all test models in batch.
 
@@ -434,7 +438,8 @@ if __name__ == '__main__':
                                      mesh_filename=mesh_filename.replace("_remesh.obj", "_normalized.obj"))
     print("predicting skinning")
     pred_rig = predict_skinning(data, pred_skeleton, skinNet, surface_geodesic,
-                                mesh_filename.replace("_remesh.obj", "_normalized.obj"))
+                                mesh_filename.replace("_remesh.obj", "_normalized.obj"),
+                                subsampling=downsample_skinning)
 
     # here we reverse the normalization to the original scale and position
     pred_rig.normalize(scale_normalize, -translation_normalize)

@@ -26,15 +26,6 @@ from datasets.skeleton_dataset import GraphDataset
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def adjust_learning_rate(optimizer, epoch, lr, schedule, gamma):
-    """Sets the learning rate to the initial LR decayed by schedule"""
-    if epoch in schedule:
-        lr *= gamma
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = param_group['lr']*gamma
-    return lr
-
-
 def save_checkpoint(state, is_best, checkpoint='checkpoint', filename='checkpoint.pth.tar', snapshot=None):
     filepath = os.path.join(checkpoint, filename)
     torch.save(state, filepath)
@@ -66,7 +57,6 @@ def main(args):
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
     # optionally resume from a checkpoint
-    lr = args.lr
     if args.resume:
         if isfile(args.resume):
             print("=> loading checkpoint '{}'".format(args.resume))
@@ -82,29 +72,26 @@ def main(args):
 
     cudnn.benchmark = True
     print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters()) / 1000000.0))
-    train_loader = DataLoader(GraphDataset(root=args.train_folder), batch_size=args.train_batch, shuffle=True)
-    val_loader = DataLoader(GraphDataset(root=args.val_folder), batch_size=args.test_batch, shuffle=False)
-    test_loader = DataLoader(GraphDataset(root=args.test_folder), batch_size=args.test_batch, shuffle=False)
+    train_loader = DataLoader(GraphDataset(root=args.train_folder), batch_size=args.train_batch, shuffle=True, follow_batch=['joints'])
+    val_loader = DataLoader(GraphDataset(root=args.val_folder), batch_size=args.test_batch, shuffle=False, follow_batch=['joints'])
+    test_loader = DataLoader(GraphDataset(root=args.test_folder), batch_size=args.test_batch, shuffle=False, follow_batch=['joints'])
     if args.evaluate:
         print('\nEvaluation only')
-        test_loss, test_acc = test(test_loader, model, args)
+        test_loss, test_acc = test(test_loader, model)
         print('test_loss {:.8f}. test_acc: {:.6f}'.format(test_loss, test_acc))
         return
-
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, args.schedule, gamma=args.gamma)
     logger = SummaryWriter(log_dir=args.logdir)
     for epoch in range(args.start_epoch, args.epochs):
-        print('\nEpoch: %d | LR: %.8f' % (epoch + 1, lr))
-        lr = adjust_learning_rate(optimizer, epoch, lr, args.schedule, args.gamma)
-
+        lr = scheduler.get_last_lr()
+        print('\nEpoch: %d | LR: %.8f' % (epoch + 1, lr[0]))
         train_loss = train(train_loader, model, optimizer, args)
-        #print('validating')
-        val_loss, val_acc = test(val_loader, model, args)
-        #print('testing')
-        test_loss, test_acc = test(test_loader, model, args)
-
-        print('Epoch{:d}. train_loss: {:.6f}.'.format(epoch, train_loss))
-        print('Epoch{:d}. val_loss: {:.6f}. val_acc: {:.6f}'.format(epoch, val_loss, val_acc))
-        print('Epoch{:d}. test_loss: {:.6f}. test_acc: {:.6f}'.format(epoch, test_loss, test_acc))
+        val_loss, val_acc = test(val_loader, model)
+        test_loss, test_acc = test(test_loader, model)
+        scheduler.step()
+        print('Epoch{:d}. train_loss: {:.6f}.'.format(epoch + 1, train_loss))
+        print('Epoch{:d}. val_loss: {:.6f}. val_acc: {:.6f}'.format(epoch + 1, val_loss, val_acc))
+        print('Epoch{:d}. test_loss: {:.6f}. test_acc: {:.6f}'.format(epoch + 1, test_loss, test_acc))
 
         # remember best acc and save checkpoint
         is_best = val_acc > best_acc
@@ -141,30 +128,30 @@ def train(train_loader, model, optimizer, args):
         loss = loss_1.mean() + loss2
         loss.backward()
         optimizer.step()
-        loss_meter.update(loss.item(), n=len(torch.unique(data.batch)))
+        loss_meter.update(loss.item())
     return loss_meter.avg
 
 
-def test(test_loader, model, args):
+def test(test_loader, model):
     global device
     model.eval()  # switch to test mode
     loss_meter = AverageMeter()
     acc_total = 0.0
+    count = 0.0
     for data in test_loader:
         #print(data.name)
         data = data.to(device)
         with torch.no_grad():
             pre_label, label = model(data)
             loss = torch.nn.functional.binary_cross_entropy_with_logits(pre_label, label.float())
-            loss_meter.update(loss.item(), n=len(torch.unique(data.batch)))
-            accumulate_start_id = 0
+            loss_meter.update(loss.item())
             for i in range(len(torch.unique(data.batch))):
-                pred_root_id = torch.argmax(pre_label[accumulate_start_id:accumulate_start_id + data.num_joint[i]]).item()
-                gt_root_id = torch.argmax(label[accumulate_start_id:accumulate_start_id + data.num_joint[i]]).item()
+                pred_root_id = torch.argmax(pre_label[data.joints_batch==i]).item()
+                gt_root_id = torch.argmax(label[data.joints_batch==i]).item()
                 if pred_root_id == gt_root_id:
                     acc_total += 1.0
-                accumulate_start_id += data.num_joint[i]
-    return loss_meter.avg, acc_total/loss_meter.count
+                count += 1.0
+    return loss_meter.avg, acc_total/count
 
 
 if __name__ == '__main__':
@@ -179,17 +166,17 @@ if __name__ == '__main__':
     parser.add_argument('--schedule', type=int, nargs='+', default=[200], help='Decrease learning rate at these epochs.')
     parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true', help='evaluate model on validation set')
     ####################################################################################################################
-    parser.add_argument('--train-batch', default=3, type=int, metavar='N', help='train batchsize')
-    parser.add_argument('--test-batch', default=3, type=int, metavar='N', help='test batchsize')
+    parser.add_argument('--train_batch', default=3, type=int, metavar='N', help='train batchsize')
+    parser.add_argument('--test_batch', default=3, type=int, metavar='N', help='test batchsize')
     parser.add_argument('-c', '--checkpoint', default='checkpoints/test', type=str, metavar='PATH',
                         help='path to save checkpoint (default: checkpoint)')
     parser.add_argument('--logdir', default='logs/test', type=str, metavar='LOG', help='directory to save logs')
     parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
-    parser.add_argument('--train_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/train/',
+    parser.add_argument('--train_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/train/',
                         type=str, help='folder of training data')
-    parser.add_argument('--val_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/val/',
+    parser.add_argument('--val_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/val/',
                         type=str, help='folder of validation data')
-    parser.add_argument('--test_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/test/',
+    parser.add_argument('--test_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/test/',
                         type=str, help='folder of testing data')
     parser.add_argument('--pos_weight', default=10.0, type=float, help='weight for positive class')
     parser.add_argument('--topk', default=0.3, type=float, help='topk ratio for ohem')

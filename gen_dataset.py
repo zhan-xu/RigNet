@@ -159,7 +159,7 @@ def genDataset(process_id):
 
 
 if __name__ == '__main__':
-    dataset_folder = "/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/"
+    dataset_folder = "/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/"
     p = Pool(8)
     p.map(genDataset, [0, 1, 2, 3, 4, 5, 6, 7])
     #genDataset(0)

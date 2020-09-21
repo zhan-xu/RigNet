@@ -28,15 +28,6 @@ from datasets.skin_dataset import SkinDataset
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def adjust_learning_rate(optimizer, epoch, lr, schedule, gamma):
-    """Sets the learning rate to the initial LR decayed by schedule"""
-    if epoch in schedule:
-        lr *= gamma
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = param_group['lr']*gamma
-    return lr
-
-
 def save_checkpoint(state, is_best, checkpoint='checkpoint', filename='checkpoint.pth.tar', snapshot=None):
     filepath = os.path.join(checkpoint, filename)
     torch.save(state, filepath)
@@ -132,16 +123,15 @@ def main(args):
         test_loss = test(test_loader, model, args, save_result=True)
         print('test_loss {:6f}'.format(test_loss))
         return
-
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, args.schedule, gamma=args.gamma)
     logger = SummaryWriter(log_dir=args.logdir)
     for epoch in range(args.start_epoch, args.epochs):
-        print('\nEpoch: %d | LR: %.8f' % (epoch + 1, lr))
-        lr = adjust_learning_rate(optimizer, epoch, lr, args.schedule, args.gamma)
-
+        lr = scheduler.get_last_lr()
+        print('\nEpoch: %d | LR: %.8f' % (epoch + 1, lr[0]))
         train_loss = train(train_loader, model, optimizer, args)
         val_loss = test(val_loader, model, args)
         test_loss = test(test_loader, model, args)
-
+        scheduler.step()
         print('Epoch{:d}. train_loss: {:.6f}.'.format(epoch + 1, train_loss))
         print('Epoch{:d}. val_loss: {:.6f}.'.format(epoch + 1, val_loss))
         print('Epoch{:d}. test_loss: {:.6f}.'.format(epoch + 1, test_loss))
@@ -169,12 +159,12 @@ def train(train_loader, model, optimizer, args):
         loss_mask_batch = data.loss_mask.float()[:, 0:args.nearest_bone]
         skin_gt = skin_gt * loss_mask_batch
         skin_gt = skin_gt / (torch.sum(torch.abs(skin_gt), dim=1, keepdim=True) + 1e-8)
-        train_mask = (torch.abs(skin_gt.sum(dim=1) - 1.0) < 1e-8).float()
+        vert_mask = (torch.abs(skin_gt.sum(dim=1) - 1.0) < 1e-8).float()  # mask out vertices whose skinning is missing from the picked K bones.
         loss = cross_entropy_with_probs(skin_pred, skin_gt, reduction='none')
-        loss = (loss * loss_mask_batch * train_mask.unsqueeze(1)).sum() / (loss_mask_batch * train_mask.unsqueeze(1)).sum()
+        loss = (loss * loss_mask_batch * vert_mask.unsqueeze(1)).sum() / (loss_mask_batch * vert_mask.unsqueeze(1)).sum()
         loss.backward()
         optimizer.step()
-        loss_meter.update(loss.item(), n=len(torch.unique(data.batch)))
+        loss_meter.update(loss.item())
     return loss_meter.avg
 
 
@@ -182,7 +172,7 @@ def test(test_loader, model, args, save_result=False):
     global device
     model.eval()  # switch to test mode
     loss_meter = AverageMeter()
-    outdir = args.checkpoint.split('/')[1]
+    outdir = args.checkpoint.split('/')[-1]
     for data in test_loader:
         data = data.to(device)
         with torch.no_grad():
@@ -191,10 +181,10 @@ def test(test_loader, model, args, save_result=False):
             loss_mask_batch = data.loss_mask.float()[:, 0:args.nearest_bone]
             skin_gt = skin_gt * loss_mask_batch
             skin_gt = skin_gt / (torch.sum(torch.abs(skin_gt), dim=1, keepdim=True) + 1e-8)
-            train_mask = (torch.abs(skin_gt.sum(dim=1) - 1.0) < 1e-8).float()
+            vert_mask = (torch.abs(skin_gt.sum(dim=1) - 1.0) < 1e-8).float()
             loss = cross_entropy_with_probs(skin_pred, skin_gt, reduction='none')
-            loss = (loss * loss_mask_batch * train_mask.unsqueeze(1)).sum() / (loss_mask_batch * train_mask.unsqueeze(1)).sum()
-            loss_meter.update(loss.item(), n=len(torch.unique(data.batch)))
+            loss = (loss * loss_mask_batch * vert_mask.unsqueeze(1)).sum() / (loss_mask_batch * vert_mask.unsqueeze(1)).sum()
+            loss_meter.update(loss.item())
 
             if save_result:
                 output_folder = 'results/{:s}/'.format(outdir)
@@ -202,26 +192,26 @@ def test(test_loader, model, args, save_result=False):
                     mkdir_p(output_folder)
                 for i in range(len(torch.unique(data.batch))):
                     print('output result for model {:d}'.format(data.name[i].item()))
-                    skin_pred_sample = skin_pred[data.batch == i]
+                    skin_pred_i = skin_pred[data.batch == i]
                     bone_names = get_bone_names(os.path.join(args.test_folder, "{:d}_skin.txt".format(data.name[i].item())))
                     tpl_e = np.loadtxt(os.path.join(args.test_folder, "{:d}_tpl_e.txt".format(data.name[i].item()))).T
                     loss_mask_sample = data.loss_mask.float()[data.batch == i, 0:args.nearest_bone]
-                    skin_pred_sample = torch.softmax(skin_pred_sample, dim=1)
-                    skin_pred_sample = skin_pred_sample * loss_mask_sample
-                    skin_nn_sample = data.skin_nn[data.batch == i, 0:args.nearest_bone]
-                    skin_pred_full = np.zeros((len(skin_pred_sample), len(bone_names)))
-                    for v in range(len(skin_pred_sample)):
-                        for nn_id in range(len(skin_nn_sample[v, :])):
-                            skin_pred_full[v, skin_nn_sample[v, nn_id]] = skin_pred_sample[v, nn_id]
-                    skin_pred_full = post_filter(skin_pred_full, tpl_e, num_ring=1)
-                    skin_pred_full[skin_pred_full < np.max(skin_pred_full, axis=1, keepdims=True) * 0.5] = 0.0
-                    skin_pred_full = skin_pred_full / (skin_pred_full.sum(axis=1, keepdims=True) + 1e-10)
+                    skin_pred_i = torch.softmax(skin_pred_i, dim=1)
+                    skin_pred_i = skin_pred_i * loss_mask_sample
+                    skin_nn_i = data.skin_nn[data.batch == i, 0:args.nearest_bone]
+                    skin_pred_asarray = np.zeros((len(skin_pred_i), len(bone_names)))
+                    for v in range(len(skin_pred_i)):
+                        for nn_id in range(len(skin_nn_i[v, :])):
+                            skin_pred_asarray[v, skin_nn_i[v, nn_id]] = skin_pred_i[v, nn_id]
+                    skin_pred_asarray = post_filter(skin_pred_asarray, tpl_e, num_ring=1)
+                    skin_pred_asarray[skin_pred_asarray < np.max(skin_pred_asarray, axis=1, keepdims=True) * 0.5] = 0.0
+                    skin_pred_asarray = skin_pred_asarray / (skin_pred_asarray.sum(axis=1, keepdims=True) + 1e-10)
                     with open(os.path.join(output_folder, "{:d}_bone_names.txt".format(data.name[i].item())), 'w') as fout:
                         for bone_name in bone_names:
                             fout.write("{:s} {:s}\n".format(bone_name[0], bone_name[1]))
-                    np.save(os.path.join(output_folder, "{:d}_full_pred.npy".format(data.name[i].item())), skin_pred_full)
+                    np.save(os.path.join(output_folder, "{:d}_full_pred.npy".format(data.name[i].item())), skin_pred_asarray)
                     skel_filename = os.path.join(args.info_folder, "{:d}.txt".format(data.name[i].item()))
-                    output_rigging(skel_filename, skin_pred_full, output_folder, data.name[i].item())
+                    output_rigging(skel_filename, skin_pred_asarray, output_folder, data.name[i].item())
     return loss_meter.avg
 
 
@@ -236,20 +226,20 @@ if __name__ == '__main__':
     parser.add_argument('--schedule', type=int, nargs='+', default=[], help='Decrease learning rate at these epochs.')
     parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true', help='evaluate model on val/test set')
     ####################################################################################################################
-    parser.add_argument('--train-batch', default=2, type=int, metavar='N', help='train batchsize')
-    parser.add_argument('--test-batch', default=2, type=int, metavar='N', help='test batchsize')
+    parser.add_argument('--train_batch', default=2, type=int, metavar='N', help='train batchsize')
+    parser.add_argument('--test_batch', default=2, type=int, metavar='N', help='test batchsize')
     parser.add_argument('-c', '--checkpoint', default='checkpoints/test', type=str, metavar='PATH',
                         help='path to save checkpoint (default: checkpoint)')
     parser.add_argument('--logdir', default='logs/test', type=str, metavar='LOG', help='directory to save logs')
     parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
-    parser.add_argument('--train_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/train/',
+    parser.add_argument('--train_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/train/',
                         type=str, help='folder of training data')
-    parser.add_argument('--val_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/val/',
+    parser.add_argument('--val_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/val/',
                         type=str, help='folder of validation data')
-    parser.add_argument('--test_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/test/',
+    parser.add_argument('--test_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/test/',
                         type=str, help='folder of testing data')
     parser.add_argument('--nearest_bone', type=int, default=5)
-    parser.add_argument('--info_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/rig_info_remesh/',
+    parser.add_argument('--info_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/rig_info_remesh/',
                         type=str, help='folder of skeleton information')
     parser.add_argument('--Dg', action='store_true', help='input inverset geodesic as addtional feature')
     parser.add_argument('--Lf', action='store_true', help='input isleaf indicator as addtional feature')

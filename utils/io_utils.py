@@ -117,33 +117,3 @@ def output_rigging(skel_name, attachment, output_folder, name):
     skel = Info(skel_name)
     skel_new = assemble_skel_skin(skel, attachment)
     skel_new.save(os.path.join(output_folder, str(name) + '_rig.txt'))
-
-    '''joint_pos = skel_new.get_joint_pos()
-    with open(os.path.join(output_folder, str(name) + '_rig.txt'), 'w') as fout:
-        # write joint positions
-        for key, val in joint_pos.items():
-            fout.write('joints {0} {1:.8f} {2:.8f} {3:.8f}\n'.format(key, val[0], val[1], val[2]))
-        fout.write('root {}\n'.format(skel_new.root.name))
-        # write skinning weights
-        for v in range(len(attachment)):
-            cur_line = 'skin {:d} '.format(v)
-            #skw = attachment[v] * (attachment[v] > 0.1)
-            skw = attachment[v]
-            skw = skw/(np.sum(skw)+1e-10)
-            for i in range(len(skw)):
-                if i == len(bones_old):
-                    break
-                if skw[i] > 1e-10:
-                    bind_joint_name = bone_names_new[bone_map[i]][0]
-                    bind_weight = skw[i]
-                    cur_line += '{:s} {:.4f} '.format(bind_joint_name, bind_weight)
-            cur_line += '\n'
-            fout.write(cur_line)
-        # write skeleton hierarchy
-        this_level = skel_new.root.children
-        while this_level:
-            next_level = []
-            for p_node in this_level:
-                fout.write('hier {0} {1}\n'.format(p_node.parent.name, p_node.name))
-                next_level += p_node.children
-            this_level = next_level'''

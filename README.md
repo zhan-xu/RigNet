@@ -4,25 +4,29 @@ This is the code repository implementing the paper "RigNet: Neural Rigging for A
 
 The project is developed on Ubuntu 16.04 with cuda10.0 + cudnn7.6.3. We suggest to use conda virtual environment, which can be set up as following: 
 
+<span style="color:red">[2020.09.13]</span> I have tested the code on Ubuntu 20.04, with cuda 10.1 + cudnn 7.6. I installed (almost all) the dependencies as their latest versions and everything works fine. The following commands have been updated which install pytorch1.6.0 and pytorch_geometric1.6.1. 
+
 ```
-conda create -n rignet python=3.6
-. activate rignet
+conda create -n rignet python=3.7
+conda activate rignet
 ```
 
 Some necessary libraries include:
 
 ```
-pip install numpy scipy matplotlib tensorboard opencv-python trimesh[easy] open3d==0.9.0
-pip install torch==1.3.0+cu100 torchvision==0.4.1+cu100 -f https://download.pytorch.org/whl/torch_stable.html
-pip install --no-cache-dir torch-scatter==1.4.0
-pip install --no-cache-dir torch-sparse==0.4.0
-pip install --no-cache-dir torch-cluster==1.4.3
-pip install --no-cache-dir torch-spline-conv==1.1.0
-pip install torch-geometric==1.3.1
+pip install numpy scipy matplotlib tensorboard open3d==0.9.0 opencv-python
+pip install "rtree>=0.8,<0.9" 
+pip install trimesh[easy]
+conda install pytorch torchvision cudatoolkit=10.1 -c pytorch
+pip install torch-scatter==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-sparse==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-cluster==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-spline-conv==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-geometric
 ```
 
 ## Quick start
-We provide a script for quick start. First download our trained models from [here](https://umass.box.com/s/l7dxfayrubf5qzxcyg7can715xnislwm). 
+We provide a script for quick start. First download our trained models from[here](https://umass.box.com/s/l7dxfayrubf5qzxcyg7can715xnislwm). 
 Put the checkpoints folder into the project folder. 
 
 Check and run quick_start.py. We provide some examples in this script. 
@@ -32,7 +36,7 @@ Generally you will get the results similar to the ones shown below:
 ![results figure](quick_start/quick_start.png)
 
 The predicted rig is saved as *_rig.txt. You can combine the OBJ file and *_rig.txt into FBX format by 
-running maya_save_fbx.py provided by us in Maya.
+running maya_save_fbx.py provided by us in Maya using mayapy.
 
 ## Data
 
@@ -65,24 +69,24 @@ Notes: As new features, we have three improvements from the paper: (1) To train 
 1. Joint prediction: 
 
     1.1 Pretrain regression module:
-    `python -u run_joint_pretrain.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/pretrain_jointnet' --logdir='logs/pretrain_jointnet' --train-batch=6 --test-batch=6 --lr 5e-4 --schedule 50 --arch='jointnet'`
+    `python -u run_joint_pretrain.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/pretrain_jointnet' --logdir='logs/pretrain_jointnet' --train_batch=6 --test_batch=6 --lr 5e-4 --schedule 50 --arch='jointnet'`
 
     1.2 Pretrain attention module:
-    `python -u run_joint_pretrain.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/pretrain_masknet' --logdir='logs/pretrain_masknet' --train-batch=6 --test-batch=6 --lr 1e-4 --schedule 50 --arch='masknet'`
+    `python -u run_joint_pretrain.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/pretrain_masknet' --logdir='logs/pretrain_masknet' --train_batch=6 --test_batch=6 --lr 1e-4 --schedule 50 --arch='masknet'`
 
     1.3 Finetune two modules with a clustering module:
-    `python -u run_joint_finetune.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/gcn_meanshift' --logdir='logs/gcn_meanshift' --train-batch=1 --test-batch=1 --jointnet_lr=1e-6 --masknet_lr=1e-6 --bandwidth_lr=1e-6 --epoch=50`
+    `python -u run_joint_finetune.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/gcn_meanshift' --logdir='logs/gcn_meanshift' --train_batch=1 --test_batch=1 --jointnet_lr=1e-6 --masknet_lr=1e-6 --bandwidth_lr=1e-6 --epoch=50`
 
 2. Connectivity prediction
 
     2.1 BoneNet:
-    `python -u run_pair_cls.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/bonenet' --logdir='logs/bonenet' --train-batch=6 --test-batch=6 --use_gs --use_gt`
+    `python -u run_pair_cls.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/bonenet' --logdir='logs/bonenet' --train_batch=6 --test_batch=6 --lr=1e-3`
 
     2.2 RootNet:
-    `python -u run_root_cls.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/rootnet' --logdir='logs/rootnet' --train-batch=6 --test-batch=6 --lr=1e-3 --use_gsgt`
+    `python -u run_root_cls.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/rootnet' --logdir='logs/rootnet' --train_batch=6 --test_batch=6 --lr=1e-3`
 
 3. Skinning prediction:
-    `python -u run_skinning.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/skinnet' --logdir='logs/skinnet' --train-batch=4 --test-batch=4 --lr=1e-3 --Dg --Lf`
+    `python -u run_skinning.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/skinnet' --logdir='logs/skinnet' --train_batch=4 --test_batch=4 --lr=1e-4 --Dg --Lf`
 
 ##  License
 This project is under dual-license. See the LICENSE README.txt file in this directory for complete text.

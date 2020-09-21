@@ -40,13 +40,6 @@ def save_checkpoint(state, is_best, checkpoint='checkpoint', filename='checkpoin
         shutil.copyfile(filepath, os.path.join(checkpoint, 'model_best.pth.tar'))
 
 
-def adjust_learning_rate(optimizer, epoch, schedule, gamma):
-    """Sets the learning rate to the initial LR decayed by schedule"""
-    if epoch in schedule:
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = param_group['lr']*gamma
-
-
 def pairwise_distances(x, y):
     #Input: x is a Nxd matrix
     #       y is an optional Mxd matirx
@@ -122,25 +115,26 @@ def main(args):
 
     cudnn.benchmark = True
     print('    Total params: %.2fM' % (sum(p.numel() for p in model.parameters()) / 1000000.0))
-    train_loader = DataLoader(GraphDataset(root=args.train_folder), batch_size=args.train_batch, shuffle=True)
-    val_loader = DataLoader(GraphDataset(root=args.val_folder), batch_size=args.test_batch, shuffle=False)
-    test_loader = DataLoader(GraphDataset(root=args.test_folder), batch_size=args.test_batch, shuffle=False)
+    train_loader = DataLoader(GraphDataset(root=args.train_folder), batch_size=args.train_batch, shuffle=True, follow_batch=['joints'])
+    val_loader = DataLoader(GraphDataset(root=args.val_folder), batch_size=args.test_batch, shuffle=False, follow_batch=['joints'])
+    test_loader = DataLoader(GraphDataset(root=args.test_folder), batch_size=args.test_batch, shuffle=False, follow_batch=['joints'])
     if args.evaluate:
         print('\nEvaluation only')
         test_loss = test(test_loader, model, args, save_result=True, best_epoch=args.start_epoch)
         print('test_loss {:8f}'.format(test_loss))
         return
 
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, args.schedule, gamma=args.gamma)
     logger = SummaryWriter(log_dir=args.logdir)
     for epoch in range(args.start_epoch, args.epochs):
         print('\nEpoch: %d ' % (epoch + 1))
-        adjust_learning_rate(optimizer, epoch, args.schedule, args.gamma)
         train_loss = train(train_loader, model, optimizer, args)
         val_loss = test(val_loader, model, args)
         test_loss = test(test_loader, model, args)
-        print('Epoch{:d}. train_loss: {:.6f}.'.format(epoch, train_loss))
-        print('Epoch{:d}. val_loss: {:.6f}.'.format(epoch, val_loss))
-        print('Epoch{:d}. test_loss: {:.6f}.'.format(epoch, test_loss))
+        scheduler.step()
+        print('Epoch{:d}. train_loss: {:.6f}.'.format(epoch + 1, train_loss))
+        print('Epoch{:d}. val_loss: {:.6f}.'.format(epoch + 1, val_loss))
+        print('Epoch{:d}. test_loss: {:.6f}.'.format(epoch + 1, test_loss))
 
         # remember best acc and save checkpoint
         is_best = val_loss < lowest_loss
@@ -164,63 +158,67 @@ def main(args):
 def train(train_loader, model, optimizer, args):
     global device
     model.train()  # switch to train mode
-    chamfer_loss = AverageMeter()
+    loss_meter = AverageMeter()
     for data in train_loader:
         data = data.to(device)
         optimizer.zero_grad()
         data_displacement, mask_pred_nosigmoid, mask_pred, bandwidth = model(data)
         y_pred = data_displacement + data.pos
-        loss_chamfer = 0.0
+        loss_total = 0.0
+        for i in range(len(torch.unique(data.batch))):
+            joint_gt = data.joints[data.joints_batch == i, :]
+            y_pred_i = y_pred[data.batch == i, :]
+            mask_pred_i = mask_pred[data.batch == i]
+            loss_total += chamfer_distance_with_average(y_pred_i.unsqueeze(0), joint_gt.unsqueeze(0))
+            clustered_pred = meanshift_cluster(y_pred_i, bandwidth, mask_pred_i, args)
+            loss_ms = 0.0
+            for j in range(args.meanshift_step):
+                loss_ms += chamfer_distance_with_average(clustered_pred[j].unsqueeze(0), joint_gt.unsqueeze(0))
+            loss_total = loss_total + args.ms_loss_weight * loss_ms / args.meanshift_step
+        loss_total /= len(torch.unique(data.batch))
         if args.use_bce:
             mask_gt = data.mask.unsqueeze(1)
-            loss_chamfer += args.bce_loss_weight * torch.nn.functional.binary_cross_entropy_with_logits(mask_pred_nosigmoid, mask_gt.float(), reduction='mean')
-        for i in range(len(torch.unique(data.batch))):
-            y_gt_sample = data.y[data.batch == i, :]
-            y_gt_sample = y_gt_sample[:data.num_joint[i], :]
-            y_pred_sample = y_pred[data.batch == i, :]
-            mask_pred_sample = mask_pred[data.batch == i]
-            loss_chamfer += chamfer_distance_with_average(y_pred_sample.unsqueeze(0), y_gt_sample.unsqueeze(0))
-            clustered_pred = meanshift_cluster(y_pred_sample, bandwidth, mask_pred_sample, args)
-            for j in range(args.meanshift_step):
-               loss_chamfer += args.ms_loss_weight *chamfer_distance_with_average(clustered_pred[j].unsqueeze(0), y_gt_sample.unsqueeze(0))
-        loss_chamfer.backward()
+            loss_total += args.bce_loss_weight * torch.nn.functional.binary_cross_entropy_with_logits(mask_pred_nosigmoid, mask_gt.float(), reduction='mean')
+        loss_total.backward()
         optimizer.step()
-        chamfer_loss.update(loss_chamfer.item(), n=len(torch.unique(data.batch)))
-    return chamfer_loss.avg
+        loss_meter.update(loss_total.item())
+    return loss_meter.avg
 
 
 def test(test_loader, model, args, save_result=False, best_epoch=None):
     global device
     model.eval()  # switch to test mode
-    chamfer_loss = AverageMeter()
-    outdir = args.checkpoint.split('/')[1]
+    loss_meter = AverageMeter()
+    outdir = args.checkpoint.split('/')[-1]
     for data in test_loader:
         data = data.to(device)
         with torch.no_grad():
             data_displacement, mask_pred_nosigmoid, mask_pred, bandwidth = model(data)
             y_pred = data_displacement + data.pos
-            loss_chamfer = 0.0
-            if args.use_bce:
-                mask_gt = data.mask.unsqueeze(1)
-                loss_chamfer += args.bce_loss_weight * torch.nn.functional.binary_cross_entropy_with_logits(mask_pred_nosigmoid, mask_gt.float(), reduction='mean')
+            loss_total = 0.0
             for i in range(len(torch.unique(data.batch))):
-                y_gt_sample = data.y[data.batch == i, :]
-                y_gt_sample = y_gt_sample[:data.num_joint[i], :]
-                y_pred_sample = y_pred[data.batch == i, :]
-                mask_pred_sample = mask_pred[data.batch == i]
-                loss_chamfer += chamfer_distance_with_average(y_pred_sample.unsqueeze(0), y_gt_sample.unsqueeze(0))
-                clustered_pred = meanshift_cluster(y_pred_sample, bandwidth, mask_pred_sample, args)
+                joint_gt = data.joints[data.joints_batch == i, :]
+                y_pred_i = y_pred[data.batch == i, :]
+                mask_pred_i = mask_pred[data.batch == i]
+                loss_total += chamfer_distance_with_average(y_pred_i.unsqueeze(0), joint_gt.unsqueeze(0))
+                clustered_pred = meanshift_cluster(y_pred_i, bandwidth, mask_pred_i, args)
+                loss_ms = 0.0
                 for j in range(args.meanshift_step):
-                    loss_chamfer += args.ms_loss_weight * chamfer_distance_with_average(clustered_pred[j].unsqueeze(0), y_gt_sample.unsqueeze(0))
+                    loss_ms += chamfer_distance_with_average(clustered_pred[j].unsqueeze(0), joint_gt.unsqueeze(0))
+                loss_total = loss_total + args.ms_loss_weight * loss_ms / args.meanshift_step
                 if save_result:
-                    output_point_cloud_ply(y_pred_sample, name=str(data.name[i].item()),
+                    output_point_cloud_ply(y_pred_i, name=str(data.name[i].item()),
                                            output_folder='results/{:s}/best_{:d}/'.format(outdir, best_epoch))
                     np.save('results/{:s}/best_{:d}/{:d}_attn.npy'.format(outdir, best_epoch, data.name[i].item()),
-                            mask_pred_sample.data.cpu().numpy())
+                            mask_pred_i.data.to("cpu").numpy())
                     np.save('results/{:s}/best_{:d}/{:d}_bandwidth.npy'.format(outdir, best_epoch, data.name[i].item()),
-                            bandwidth.data.cpu().numpy())
-            chamfer_loss.update(loss_chamfer.item(), n=len(torch.unique(data.batch)))
-    return chamfer_loss.avg
+                            bandwidth.data.to("cpu").numpy())
+            loss_total /= len(torch.unique(data.batch))
+            if args.use_bce:
+                mask_gt = data.mask.unsqueeze(1)
+                loss_total += args.bce_loss_weight * torch.nn.functional.binary_cross_entropy_with_logits(mask_pred_nosigmoid, mask_gt.float(), reduction='mean')
+            loss_meter.update(loss_total.item())
+    return loss_meter.avg
 
 
 if __name__ == '__main__':
@@ -231,15 +229,15 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', default=100, type=int, metavar='N', help='number of total epochs to run')
     parser.add_argument('--schedule', type=int, nargs='+', default=[50], help='Decrease learning rate at these epochs.')
     parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true', help='evaluate model on val/test set')
-    parser.add_argument('--train-batch', default=1, type=int, metavar='N', help='train batchsize')
-    parser.add_argument('--test-batch', default=1, type=int, metavar='N', help='test batchsize')
+    parser.add_argument('--train_batch', default=1, type=int, metavar='N', help='train batchsize')
+    parser.add_argument('--test_batch', default=1, type=int, metavar='N', help='test batchsize')
     parser.add_argument('-c', '--checkpoint', default='checkpoints/test', type=str, metavar='PATH',
                         help='path to save checkpoint (default: checkpoint)')
     parser.add_argument('--logdir', default='logs/test', type=str, metavar='LOG', help='directory to save logs')
     parser.add_argument('--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
-    parser.add_argument('--train_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/train/', type=str, help='folder of training data')
-    parser.add_argument('--val_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/val/', type=str, help='folder of validation data')
-    parser.add_argument('--test_folder', default='/media/zhanxu/4T1/ModelResource_RigNetv1_preproccessed/test/', type=str, help='folder of testing data')
+    parser.add_argument('--train_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/train/', type=str, help='folder of training data')
+    parser.add_argument('--val_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/val/', type=str, help='folder of validation data')
+    parser.add_argument('--test_folder', default='/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/test/', type=str, help='folder of testing data')
     ######################
     parser.add_argument('--jointnet_lr', default=5e-5, type=float)
     parser.add_argument('--masknet_lr', default=5e-5, type=float)
@@ -248,7 +246,7 @@ if __name__ == '__main__':
     parser.add_argument('--masknet_resume', default='checkpoints/pretrain_masknet/model_best.pth.tar', type=str)
     parser.add_argument('--meanshift_step', default=15, type=int, help='step size for meanshift update')
     parser.add_argument('--step_size', default=0.3, type=float)  # step size for meanshift
-    parser.add_argument('--ms_loss_weight', default=0.2, type=float)  # weight for chamfer loss after meanshift
+    parser.add_argument('--ms_loss_weight', default=2.0, type=float)  # weight for chamfer loss after meanshift
     parser.add_argument('--use_bce', action='store_true')  # if using mask supervision during finetuning
     parser.add_argument('--bce_loss_weight', default=0.1, type=float)  # weight for bce loss
 

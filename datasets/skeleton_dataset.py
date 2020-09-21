@@ -10,9 +10,31 @@ import os
 import torch
 import numpy as np
 import glob
+import itertools as it
+from utils import binvox_rw
 from torch_geometric.data import Data, InMemoryDataset
 from torch_geometric.utils import add_self_loops
-from utils import binvox_rw
+
+
+class SkeletonData(Data):
+    def __init__(self, x=None, pos=None, name=None, mask=None, joints=None,
+                 tpl_edge_index=None, geo_edge_index=None, pairs=None, pair_attr=None):
+        super(SkeletonData, self).__init__()
+        self.x = x
+        self.pos = pos
+        self.name = name
+        self.mask = mask
+        self.joints = joints
+        self.tpl_edge_index = tpl_edge_index
+        self.geo_edge_index = geo_edge_index
+        self.pairs = pairs
+        self.pair_attr = pair_attr
+
+    def __inc__(self, key, value):
+        if key == 'pairs':
+            return self.joints.size(0)
+        else:
+            return super(SkeletonData, self).__inc__(key, value)
 
 
 class GraphDataset(InMemoryDataset):
@@ -63,44 +85,37 @@ class GraphDataset(InMemoryDataset):
             i += 1.0
             v = np.loadtxt(v_filename)
             m = np.loadtxt(v_filename.replace('_v.txt', '_attn.txt'))
-            v = torch.from_numpy(v).float()
-            m = torch.from_numpy(m).long()
             tpl_e = np.loadtxt(v_filename.replace('_v.txt', '_tpl_e.txt')).T
             geo_e = np.loadtxt(v_filename.replace('_v.txt', '_geo_e.txt')).T
-            tpl_e = torch.from_numpy(tpl_e).long()
-            geo_e = torch.from_numpy(geo_e).long()
-            tpl_e, _ = add_self_loops(tpl_e, num_nodes=v.size(0))
-            geo_e, _ = add_self_loops(geo_e, num_nodes=v.size(0))
-            y = np.loadtxt(v_filename.replace('_v.txt', '_j.txt'))
-            num_joint = len(y)
-            joint_pos = y
-            if len(y) < len(v):
-                y = np.tile(y, (round(1.0 * len(v) / len(y) + 0.5), 1))
-                y = y[:len(v), :]
-            elif len(y) > len(v):
-                y = y[:len(v), :]
-            y = torch.from_numpy(y).float()
-
+            joints = np.loadtxt(v_filename.replace('_v.txt', '_j.txt'))
             adj = np.loadtxt(v_filename.replace('_v.txt', '_adj.txt'), dtype=np.uint8)
 
             vox_file = v_filename.replace('_v.txt', '.binvox')
             with open(vox_file, 'rb') as fvox:
                 vox = binvox_rw.read_as_3d_array(fvox)
-            pair_all = []
-            for joint1_id in range(adj.shape[0]):
-                for joint2_id in range(joint1_id + 1, adj.shape[1]):
-                    dist = np.linalg.norm(joint_pos[joint1_id] - joint_pos[joint2_id])
-                    bone_samples = self.sample_on_bone(joint_pos[joint1_id], joint_pos[joint2_id])
-                    bone_samples_inside, _ = self.inside_check(bone_samples, vox)
-                    outside_proportion = len(bone_samples_inside) / (len(bone_samples) + 1e-10)
-                    pair = np.array([joint1_id, joint2_id, dist, outside_proportion, adj[joint1_id, joint2_id]])
-                    pair_all.append(pair)
-            pair_all = np.array(pair_all)
-            pair_all = torch.from_numpy(pair_all).float()
-            num_pair = len(pair_all)
-
+            pairs = list(it.combinations(range(adj.shape[0]), 2))
+            pair_attr = []
+            for pr in pairs:
+                dist = np.linalg.norm(joints[pr[0]] - joints[pr[1]])
+                bone_samples = self.sample_on_bone(joints[pr[0]], joints[pr[1]])
+                bone_samples_inside, _ = self.inside_check(bone_samples, vox)
+                outside_proportion = len(bone_samples_inside) / (len(bone_samples) + 1e-10)
+                attr = np.array([dist, outside_proportion, adj[pr[0], pr[1]]])
+                pair_attr.append(attr)
+            pairs = np.array(pairs)
+            pair_attr = np.array(pair_attr)
             name = int(v_filename.split('/')[-1].split('_')[0])
-            data_list.append(Data(x=v[:, 3:6], pos=v[:, 0:3], name=name, mask=m, y=y, num_joint=num_joint,
-                                  tpl_edge_index=tpl_e, geo_edge_index=geo_e, pairs=pair_all, num_pair=num_pair))
+
+            v = torch.from_numpy(v).float()
+            m = torch.from_numpy(m).long()
+            tpl_e = torch.from_numpy(tpl_e).long()
+            geo_e = torch.from_numpy(geo_e).long()
+            tpl_e, _ = add_self_loops(tpl_e, num_nodes=v.size(0))
+            geo_e, _ = add_self_loops(geo_e, num_nodes=v.size(0))
+            joints = torch.from_numpy(joints).float()
+            pairs = torch.from_numpy(pairs).float()
+            pair_attr = torch.from_numpy(pair_attr).float()
+            data_list.append(SkeletonData(x=v[:, 3:6], pos=v[:, 0:3], name=name, mask=m, joints=joints,
+                                          tpl_edge_index=tpl_e, geo_edge_index=geo_e, pairs=pairs, pair_attr=pair_attr))
         data, slices = self.collate(data_list)
         torch.save((data, slices), self.processed_paths[0])
