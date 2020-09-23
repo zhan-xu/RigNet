@@ -26,7 +26,7 @@ pip install torch-geometric
 ```
 
 ## Quick start
-We provide a script for quick start. First download our trained models from[here](https://umass.box.com/s/l7dxfayrubf5qzxcyg7can715xnislwm). 
+We provide a script for quick start. First download our trained models from [here](https://umass.box.com/s/l7dxfayrubf5qzxcyg7can715xnislwm). 
 Put the checkpoints folder into the project folder. 
 
 Check and run quick_start.py. We provide some examples in this script. 
@@ -35,7 +35,11 @@ Generally you will get the results similar to the ones shown below:
 
 ![results figure](quick_start/quick_start.png)
 
-The predicted rig is saved as *_rig.txt. You can combine the OBJ file and *_rig.txt into FBX format by 
+If you want to try your own models, remember to simplify the meshes so that 
+the remeshed ones have vertices between 1K to 5K. I use quadratic edge collapse in MeshLap for this. 
+Name the simplified meshed as *_remesh.obj.
+
+The predicted rigs are saved as *_rig.txt. You can combine the OBJ file and *_rig.txt into FBX format by 
 running maya_save_fbx.py provided by us in Maya using mayapy.
 
 ## Data
