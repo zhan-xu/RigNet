@@ -36,8 +36,8 @@ Generally you will get the results similar to the ones shown below:
 ![results figure](quick_start/quick_start.png)
 
 If you want to try your own models, remember to simplify the meshes so that 
-the remeshed ones have vertices between 1K to 5K. I use quadratic edge collapse in MeshLap for this. 
-Name the simplified meshed as *_remesh.obj.
+the remeshed ones have vertices between 1K to 5K. I use quadratic edge collapse in MeshLab for this. 
+please name the simplified meshed as *_remesh.obj.
 
 The predicted rigs are saved as *_rig.txt. You can combine the OBJ file and *_rig.txt into FBX format by 
 running maya_save_fbx.py provided by us in Maya using mayapy.
