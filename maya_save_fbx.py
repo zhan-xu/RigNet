@@ -49,7 +49,7 @@ def loadInfo(info_name, geo_name):
                     cmds.joint(p=(child_pos[0], child_pos[1],child_pos[2]), name = c_node)
                     next_level.append(c_node)
         this_level = next_level         
-    
+    cmds.joint(root_name, e=True, oj='xyz', sao='yup', ch=True, zso=True)
     cmds.skinCluster( root_name, geo_name)
     #print len(joint_skin)
     for i in range(len(joint_skin)):
