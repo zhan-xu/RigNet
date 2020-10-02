@@ -7,6 +7,7 @@
 # ---------------------------------------------------------------------------------------------------------
 
 import os
+from sys import platform
 import trimesh
 import numpy as np
 import open3d as o3d
@@ -92,7 +93,13 @@ def create_single_data(mesh_filaname):
 
     # voxel
     if not os.path.exists(mesh_filaname.replace('_remesh.obj', '_normalized.binvox')):
-        os.system("./binvox -d 88 -pb " + mesh_filaname.replace("_remesh.obj", "_normalized.obj"))
+        if platform == "linux" or platform == "linux2":
+            os.system("./binvox -d 88 -pb " + mesh_filaname.replace("_remesh.obj", "_normalized.obj"))
+        elif platform == "win32":
+            os.system("binvox.exe -d 88 " + mesh_filaname.replace("_remesh.obj", "_normalized.obj"))
+        else:
+            raise Exception('Sorry, we currently only support windows and linux.')
+
     with open(mesh_filaname.replace('_remesh.obj', '_normalized.binvox'), 'rb') as fvox:
         vox = binvox_rw.read_as_3d_array(fvox)
 
