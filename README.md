@@ -6,7 +6,7 @@ The project is developed on Ubuntu 16.04 with cuda10.0 and cudnn7.6.3.
 It has also been successfully tested on Windows 10.
 On both platforms, we suggest to use conda virtual environment. 
 
-#####For Linux user
+##### For Linux user
 
 **[2020.09.13]** I have tested the code on Ubuntu 20.04, with cuda 10.1 + cudnn 7.6. I installed (almost all) the dependencies as their latest versions and everything works fine. The following commands have been updated which install pytorch1.6.0 and pytorch_geometric1.6.1. 
 
@@ -29,7 +29,7 @@ pip install torch-spline-conv==latest+cu101 -f https://pytorch-geometric.com/whl
 pip install torch-geometric
 ```
 
-#####For Windows user
+##### For Windows user
 
 The code has been tested on Windows 10 with cuda 10.1. The most important difference from Linux setup is, you need to download Windows-compiled Rtree from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#rtree), and install it by
 `pip install Rtree‑0.9.4‑cp37‑cp37m‑win_amd64.whl` (64-bit system) or 
