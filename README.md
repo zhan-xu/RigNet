@@ -2,9 +2,13 @@ This is the code repository implementing the paper "RigNet: Neural Rigging for A
 
 ## Dependecy and Setup
 
-The project is developed on Ubuntu 16.04 with cuda10.0 + cudnn7.6.3. We suggest to use conda virtual environment, which can be set up as following: 
+The project is developed on Ubuntu 16.04 with cuda10.0 and cudnn7.6.3. 
+It has also been successfully tested on Windows 10.
+On both platforms, we suggest to use conda virtual environment. 
 
-<span style="color:red">[2020.09.13]</span> I have tested the code on Ubuntu 20.04, with cuda 10.1 + cudnn 7.6. I installed (almost all) the dependencies as their latest versions and everything works fine. The following commands have been updated which install pytorch1.6.0 and pytorch_geometric1.6.1. 
+#####For Linux user
+
+**[2020.09.13]** I have tested the code on Ubuntu 20.04, with cuda 10.1 + cudnn 7.6. I installed (almost all) the dependencies as their latest versions and everything works fine. The following commands have been updated which install pytorch1.6.0 and pytorch_geometric1.6.1. 
 
 ```
 conda create -n rignet python=3.7
@@ -24,6 +28,14 @@ pip install torch-cluster==latest+cu101 -f https://pytorch-geometric.com/whl/tor
 pip install torch-spline-conv==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
 pip install torch-geometric
 ```
+
+#####For Windows user
+
+The code has been tested on Windows 10 with cuda 10.1. The most important difference from Linux setup is, you need to download Windows-compiled Rtree from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#rtree), and install it by
+`pip install Rtree‑0.9.4‑cp37‑cp37m‑win_amd64.whl` (64-bit system) or 
+`pip install Rtree‑0.9.4‑cp37‑cp37m‑win32.whl` (32-bit system). Other libraries can be installed in the same way as Linux setup instructions.
+
+
 
 ## Quick start
 We provide a script for quick start. First download our trained models from [here](https://umass.box.com/s/l7dxfayrubf5qzxcyg7can715xnislwm). 

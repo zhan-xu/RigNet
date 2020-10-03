@@ -209,7 +209,10 @@ def predict_skeleton(input_data, vox, root_pred_net, bone_pred_net, mesh_filenam
     loadSkel_recur(pred_skel.root, i, None, pred_joints, parent)
     pred_skel.joint_pos = pred_skel.get_joint_dict()
     #show_mesh_vox(mesh_filename, vox, pred_skel.root)
-    img = show_obj_skel(mesh_filename, pred_skel.root)
+    try:
+        img = show_obj_skel(mesh_filename, pred_skel.root)
+    except:
+        print("Visualization is not supported on headless servers. Please consider other headless rendering methods.")
     return pred_skel
 
 
