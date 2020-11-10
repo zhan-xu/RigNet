@@ -413,7 +413,7 @@ if __name__ == '__main__':
     print("     skinning prediction network loaded.")
 
     # Here we provide 16~17 examples. For best results, we will need to override the learned bandwidth and its associated threshold
-    # To process other input characters, please first try the learned bandwidth (0.429 in the provided model), and the default threshold 1e-5.
+    # To process other input characters, please first try the learned bandwidth (0.0429 in the provided model), and the default threshold 1e-5.
     # We also use these two default parameters for processing all test models in batch.
 
     #model_id, bandwidth, threshold = "smith", None, 1e-5
