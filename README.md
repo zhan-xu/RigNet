@@ -1,5 +1,8 @@
 This is the code repository implementing the paper "RigNet: Neural Rigging for Articulated Characters".
 
+**[2020.11.23]** There is now a great add-on for Blender based on our work, 
+implemented by @[pKrime](https://github.com/pKrime). Please check the Github [link](https://github.com/pKrime/brignet), and the video [demo](https://www.youtube.com/watch?v=ueLlS3IoeGY&feature=youtu.be). 
+
 ## Dependecy and Setup
 
 The project is developed on Ubuntu 16.04 with cuda10.0 and cudnn7.6.3. 
