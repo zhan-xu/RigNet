@@ -25,10 +25,10 @@ pip install numpy scipy matplotlib tensorboard open3d==0.9.0 opencv-python
 pip install "rtree>=0.8,<0.9" 
 pip install trimesh[easy]
 conda install pytorch==1.6.0 torchvision==0.7.0 cudatoolkit=10.1 -c pytorch
-pip install torch-scatter==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-pip install torch-sparse==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-pip install torch-cluster==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
-pip install torch-spline-conv==latest+cu101 -f https://pytorch-geometric.com/whl/torch-1.6.0.html
+pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.6.0+cu101.html
+pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.6.0+cu101.html
+pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.6.0+cu101.html
+pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.6.0+cu101.html
 pip install torch-geometric
 ```
 
