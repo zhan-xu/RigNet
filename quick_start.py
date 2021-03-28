@@ -59,7 +59,7 @@ def create_single_data(mesh_filaname):
     :return: wrapped data, voxelized mesh, and geodesic distance matrix of all vertices
     """
     mesh = o3d.io.read_triangle_mesh(mesh_filaname)
-    mesh.compute_triangle_normals()
+    mesh.compute_vertex_normals()
     mesh_v = np.asarray(mesh.vertices)
     mesh_vn = np.asarray(mesh.vertex_normals)
     mesh_f = np.asarray(mesh.triangles)
