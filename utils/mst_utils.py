@@ -145,9 +145,13 @@ def primMST_symmetry(graph, init_id, joints):
                 mstSet[u2] = True
                 parent[u2] = joint_mapping[parent[u]]
                 key[u2] = graph[u2, parent[u2]]
-        elif u in middle_joint_ids and parent[u] in left_joint_ids:
-            # form loop
-            u2 = None
+        elif u in left_joint_ids and parent[u] in right_joint_ids:
+            u2 = joint_mapping[u]
+            if mstSet[u2] is False:
+                mstSet[u2] = True
+                parent[u2] = joint_mapping[parent[u]]
+                key[u2] = graph[u2, parent[u2]]
+
         # right cases
         elif u in right_joint_ids and parent[u] in middle_joint_ids:
             u2 = joint_mapping[u]
@@ -161,9 +165,12 @@ def primMST_symmetry(graph, init_id, joints):
                 mstSet[u2] = True
                 parent[u2] = joint_mapping[parent[u]]
                 key[u2] = graph[u2, parent[u2]]
-        elif u in middle_joint_ids and parent[u] in right_joint_ids:
-            # form loop
-            u2 = None
+        elif u in right_joint_ids and parent[u] in left_joint_ids:
+            u2 = joint_mapping[u]
+            if mstSet[u2] is False:
+                mstSet[u2] = True
+                parent[u2] = joint_mapping[parent[u]]
+                key[u2] = graph[u2, parent[u2]]
         # middle case
         else:
             u2 = None
