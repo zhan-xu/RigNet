@@ -185,7 +185,7 @@ def primMST_symmetry(graph, init_id, joints):
                 key[v] = graph[u2, v]
                 parent[v] = u2
 
-    return parent, key
+    return parent, key, init_id
 
 
 def loadSkel_recur(p_node, parent_id, joint_name, joint_pos, parent):
