@@ -132,7 +132,7 @@ def train(train_loader, model, optimizer, args):
             data_displacement = model(data)
             y_pred = data_displacement + data.pos
             loss = 0.0
-            for i in range(args.train_batch):
+            for i in range(len(torch.unique(data.joints_batch))):
                 joint_gt = data.joints[data.joints_batch == i, :]
                 y_pred_i = y_pred[data.batch == i, :]
                 loss += chamfer_distance_with_average(y_pred_i.unsqueeze(0), joint_gt.unsqueeze(0))
@@ -159,7 +159,7 @@ def test(test_loader, model, args, save_result=False, best_epoch=None):
                 data_displacement = model(data)
                 y_pred = data_displacement + data.pos
                 loss = 0.0
-                for i in range(args.test_batch):
+                for i in range(len(torch.unique(data.joints_batch))):
                     joint_gt = data.joints[data.joints_batch == i, :]
                     y_pred_i = y_pred[data.batch == i, :]
                     loss += chamfer_distance_with_average(y_pred_i.unsqueeze(0), joint_gt.unsqueeze(0))
