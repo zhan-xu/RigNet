@@ -140,7 +140,7 @@ def genDataset(process_id):
             input_samples.append(this_sample)
             ground_truth_labels.append(this_label)
 
-        with open(os.path.join(dataset_folder, '{:s}/{:d}_skin.txt').format(split_name, model_id), 'w') as fout:
+        with open(os.path.join(dataset_folder, '{:s}/{:d}_skin.txt'.format(split_name, model_id)), 'w') as fout:
             for i in range(len(bone_pos)):
                 fout.write('bones {:s} {:s} {:.6f} {:.6f} {:.6f} '
                            '{:.6f} {:.6f} {:.6f}\n'.format(bone_names[i][0], bone_names[i][1],
