@@ -67,6 +67,8 @@ def genDataset(process_id):
         info_filename = os.path.join(dataset_folder, 'rig_info_remesh/{:d}.txt'.format(model_id))
         remeshed_obj = o3d.io.read_triangle_mesh(remeshed_obj_filename)
         remesh_obj_v = np.asarray(remeshed_obj.vertices)
+        if not remeshed_obj.has_vertex_normals():
+            remeshed_obj.compute_vertex_normals()
         remesh_obj_vn = np.asarray(remeshed_obj.vertex_normals)
         remesh_obj_f = np.asarray(remeshed_obj.triangles)
         rig_info = Info(info_filename)
