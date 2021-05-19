@@ -190,11 +190,11 @@ def shoot_rays(mesh, origins, ray_dir, debug=False, model_id=None):
 if __name__ == '__main__':
     start_id = int(sys.argv[1])
     end_id = int(sys.argv[2])
+    subsampling = True # decimate mesh to speed up
 
     ray_per_sample = 14 # number of rays shoot from each joint
-    dataset_folder = "/media/zhanxu/4T1/ModelResource_Dataset_rt/"
+    dataset_folder = "/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/"
 
-    obj_folder = os.path.join(dataset_folder, "obj/")
     remesh_obj_folder = os.path.join(dataset_folder, "obj_remesh/")
     info_folder = os.path.join(dataset_folder, "rig_info/")
     res_folder = os.path.join(dataset_folder, "pretrain_attention/")
@@ -202,32 +202,28 @@ if __name__ == '__main__':
 
     for model_id in model_list[start_id:end_id]:
         print(model_id)
-        mesh_remesh = trimesh.load(os.path.join(remesh_obj_folder, '{:d}.obj'.format(model_id)))
-        mesh_ori = trimesh.load(os.path.join(obj_folder, '{:d}.obj'.format(model_id)))
+        mesh = o3d.io.read_triangle_mesh(os.path.join(remesh_obj_folder, '{:d}.obj'.format(model_id)))
+        vtx_ori = np.asarray(mesh.vertices)
         rig_info = Info(os.path.join(info_folder, '{:d}.txt'.format(model_id)))
 
-        # pick one mesh with fewer faces to speed up
-        if len(mesh_remesh.faces) < len(mesh_ori.faces):
-            mesh = mesh_remesh
-        else:
-            mesh = mesh_ori
-        trimesh.repair.fix_normals(mesh)
+        if subsampling:
+            mesh = mesh.simplify_quadric_decimation(3000)
+
+        mesh_trimesh = trimesh.Trimesh(vertices=np.asarray(mesh.vertices), faces=np.asarray(mesh.triangles), process=False)
+        trimesh.repair.fix_normals(mesh_trimesh)
 
         origins, dirs = form_rays(rig_info)
-        hit_pos, all_hit_ori_id, all_hit_ori = shoot_rays(mesh, origins, dirs, debug=False, model_id=model_id)
+        hit_pos, all_hit_ori_id, all_hit_ori = shoot_rays(mesh_trimesh, origins, dirs, debug=False, model_id=model_id)
 
-        # A problem with trimesh is the vertice order is not the same as obj file. Here we read the obj again with open3d.
-        mesh = o3d.io.read_triangle_mesh(os.path.join(remesh_obj_folder, '{:d}.obj'.format(model_id)))
-        pts = np.array(mesh.vertices)
-        dist = np.sqrt(np.sum((pts[np.newaxis, ...] - hit_pos[:, np.newaxis, :])**2, axis=2))
+        dist = np.sqrt(np.sum((vtx_ori[np.newaxis, ...] - hit_pos[:, np.newaxis, :])**2, axis=2))
         dist = (dist < 2e-2)
 
-        attn = np.zeros(len(pts), np.bool)
+        attn = np.zeros(len(vtx_ori), np.bool)
         for joint_id in np.unique(all_hit_ori_id):
             num_nn = np.sum(np.sum(dist[np.argwhere(all_hit_ori_id == joint_id).squeeze(), :], axis=0) > 0)
             if num_nn < 6:
                 # too few nearest points
-                id_sort = np.argsort(np.linalg.norm(pts - all_hit_ori[joint_id][np.newaxis, :], axis=1))
+                id_sort = np.argsort(np.linalg.norm(vtx_ori - all_hit_ori[joint_id][np.newaxis, :], axis=1))
                 attn[id_sort[0:6]] = True
             else:
                 id_nn = np.argwhere(np.sum(dist[np.argwhere(all_hit_ori_id == joint_id).squeeze(), :], axis=0) > 0).squeeze(1)
