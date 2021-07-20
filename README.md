@@ -3,6 +3,9 @@ This is the code repository implementing the paper "RigNet: Neural Rigging for A
 **[2020.11.23]** There is now a great add-on for Blender based on our work, 
 implemented by @[pKrime](https://github.com/pKrime). Please check the Github [link](https://github.com/pKrime/brignet), and the video [demo](https://www.youtube.com/watch?v=ueLlS3IoeGY&feature=youtu.be). 
 
+**[2021.07.20]** Another add-on for Blender, 
+implemented by @[L-Medici](https://github.com/L-Medici). Please check the Github [link](https://github.com/L-Medici/Rignet_blender_addon).
+
 ## Dependecy and Setup
 
 The project is developed on Ubuntu 16.04 with cuda10.0 and cudnn7.6.3. 
@@ -11,24 +14,21 @@ On both platforms, we suggest to use conda virtual environment.
 
 #### For Linux user
 
-**[2020.09.13]** I have tested the code on Ubuntu 20.04, with cuda 10.1 + cudnn 7.6. I installed (almost all) the dependencies as their latest versions and everything works fine. The following commands have been updated which install pytorch1.6.0 and pytorch_geometric1.6.1. 
+**[2021.07.20]** I have tested the code on Ubuntu 18.04, with cuda 11.0. The following commands have been updated which install pytorch 1.7.1 and pytorch_geometric 1.7.2. 
 
 ```
-conda create -n rignet python=3.7
-conda activate rignet
+conda create --name rignet_cuda11 python=3.6
+conda activate rignet_cuda11
 ```
 
 Some necessary libraries include:
 
 ```
 pip install numpy scipy matplotlib tensorboard open3d==0.9.0 opencv-python
-pip install "rtree>=0.8,<0.9" 
+pip install "rtree>=0.8,<0.9"
 pip install trimesh[easy]
-conda install pytorch==1.6.0 torchvision==0.7.0 cudatoolkit=10.1 -c pytorch
-pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.6.0+cu101.html
-pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.6.0+cu101.html
-pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.6.0+cu101.html
-pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.6.0+cu101.html
+conda install pytorch==1.7.1 torchvision==0.8.2 cudatoolkit=11.0 -c pytorch
+pip install --no-index torch-scatter torch-sparse torch-cluster -f https://pytorch-geometric.com/whl/torch-1.7.1+cu110.html
 pip install torch-geometric
 ```
 
@@ -41,7 +41,7 @@ The code has been tested on Windows 10 with cuda 10.1. The most important differ
 
 
 ## Quick start
-We provide a script for quick start. First download our trained models from [here](https://umass.box.com/s/l7dxfayrubf5qzxcyg7can715xnislwm). 
+We provide a script for quick start. First download our trained models from [here](https://umass-my.sharepoint.com/:u:/g/personal/zhanxu_umass_edu/EYKLCvYTWFJArehlo3-H2SgBABnY08B4k5Q14K7H1Hh0VA). 
 Put the checkpoints folder into the project folder. 
 
 Check and run quick_start.py. We provide some examples in this script. 
@@ -62,10 +62,10 @@ running maya_save_fbx.py provided by us in Maya using mayapy. (To use numpy in m
 Our dataset ModelsResource-RigNetv1 has 2,703 models. 
 We split it into 80% for training (2,163‬ models), 10%
 for validation (270 models), and 10% for testing. 
-All models in fbx format can be downloaded [here](https://umass.box.com/s/448zm5iw1ewbq4l2kdll6q99v5y3q4pw).
+All models in fbx format can be downloaded [here](https://umass-my.sharepoint.com/:u:/g/personal/zhanxu_umass_edu/EVgpX4uZEVNLu8OjX9JRaFYBzOjfm4znndui29evdEfs-g).
 
 To use this dataset in this project, pre-processing is performed. 
-We put the pre-processed data [here](https://umass.box.com/s/9bo643jb2jy6tu9nffoe8zmad8dio0z5), which consists of several sub-folders.
+We put the pre-processed data [here](https://umass-my.sharepoint.com/:u:/g/personal/zhanxu_umass_edu/EaUH-2lI6-xOrJ0N9fDbZOABREt4ryEtQ64wmELF5SReTg), which consists of several sub-folders.
 
 * obj: all meshes in OBJ format.
 * rig_info: we store the rigging information into a txt file. Each txt file has four blocks. (1) Lines starting with "joint" define a joint with its 3D position. Each of joint line has four elements, which are joint_name, X, Y, and Z. (2) Line starting with "root" defines the name of root joint. (3) Lines starting with "hier" define the hierarchy of skeleton. Each hierarchy line has two elements, which are parent joint name and its child joint name. One parent joint can have multiple children joints. (4) Lines starting with "skin" define the skinning weights. Each skinning line follows the format as vertex_id, bind_joint_name_1, bind_weight_1, bind_joint_name_2, bind_weight_2 ... The vertex_id follows the vertice order in obj files in the above obj folder.

@@ -17,6 +17,7 @@ sys.path.append("./")
 import os
 import glob
 import time
+import copy
 import trimesh
 import numpy as np
 import open3d as o3d
@@ -187,6 +188,37 @@ def shoot_rays(mesh, origins, ray_dir, debug=False, model_id=None):
     return all_hit_pos, all_hit_ori_id, all_hit_ori
 
 
+def normalize_mesh_rig(mesh, rig):
+    # normalize mesh
+    mesh_v = np.asarray(mesh.vertices)
+    dims = [max(mesh_v[:, 0]) - min(mesh_v[:, 0]),
+            max(mesh_v[:, 1]) - min(mesh_v[:, 1]),
+            max(mesh_v[:, 2]) - min(mesh_v[:, 2])]
+    scale = 1.0 / max(dims)
+    pivot = np.array([(min(mesh_v[:, 0]) + max(mesh_v[:, 0])) / 2, min(mesh_v[:, 1]),
+                      (min(mesh_v[:, 2]) + max(mesh_v[:, 2])) / 2])
+    mesh_v[:, 0] -= pivot[0]
+    mesh_v[:, 1] -= pivot[1]
+    mesh_v[:, 2] -= pivot[2]
+    mesh_v *= scale
+    mesh.vertices = o3d.utility.Vector3dVector(mesh_v)
+
+    # normalize rig
+    for k, v in rig.joint_pos.items():
+        rig.joint_pos[k] -= pivot
+        rig.joint_pos[k] *= scale
+    this_level = [rig.root]
+    while this_level:
+        next_level = []
+        for node in this_level:
+            node.pos = (np.array(node.pos) - pivot) * scale
+            node.pos = (node.pos[0], node.pos[1], node.pos[2])
+            for ch in node.children:
+                next_level.append(ch)
+        this_level = next_level
+
+    return mesh, rig
+
 if __name__ == '__main__':
     start_id = int(sys.argv[1])
     end_id = int(sys.argv[2])
@@ -194,17 +226,21 @@ if __name__ == '__main__':
 
     ray_per_sample = 14 # number of rays shoot from each joint
     dataset_folder = "/media/zhanxu/4T/ModelResource_RigNetv1_preproccessed/"
+    #dataset_folder = "/home/zhanxu/Proj/RigNet_public/quick_start/tigran/"
 
     remesh_obj_folder = os.path.join(dataset_folder, "obj_remesh/")
     info_folder = os.path.join(dataset_folder, "rig_info/")
     res_folder = os.path.join(dataset_folder, "pretrain_attention/")
     model_list = np.loadtxt(os.path.join(dataset_folder, "model_list.txt"), dtype=int)
+    #model_list = np.array([1, 2, 3, 4, 5, 6, 7], dtype=np.int)
 
     for model_id in model_list[start_id:end_id]:
         print(model_id)
         mesh = o3d.io.read_triangle_mesh(os.path.join(remesh_obj_folder, '{:d}.obj'.format(model_id)))
-        vtx_ori = np.asarray(mesh.vertices)
         rig_info = Info(os.path.join(info_folder, '{:d}.txt'.format(model_id)))
+        mesh, rig_info = normalize_mesh_rig(mesh, rig_info)
+        mesh_ori = copy.deepcopy(mesh)
+        vtx_ori = np.asarray(mesh.vertices)
 
         if subsampling:
             mesh = mesh.simplify_quadric_decimation(3000)
@@ -228,4 +264,16 @@ if __name__ == '__main__':
             else:
                 id_nn = np.argwhere(np.sum(dist[np.argwhere(all_hit_ori_id == joint_id).squeeze(), :], axis=0) > 0).squeeze(1)
                 attn[id_nn] = True
+
+        # vis = o3d.visualization.Visualizer()
+        # vis.create_window()
+        # mesh_ls = o3d.geometry.LineSet.create_from_triangle_mesh(mesh_ori)
+        # mesh_ls.colors = o3d.utility.Vector3dVector([[0.8, 0.8, 0.8] for i in range(len(mesh_ls.lines))])
+        # vis.add_geometry(mesh_ls)
+        # pcd = o3d.geometry.PointCloud(points=o3d.utility.Vector3dVector(vtx_ori[np.argwhere(attn).squeeze()]))
+        # pcd.paint_uniform_color([1.0, 0.0, 0.0])
+        # vis.add_geometry(pcd)
+        # vis.run()
+        # vis.destroy_window()
+
         np.savetxt(os.path.join(res_folder, '{:d}.txt'.format(model_id)), attn, fmt='%d')
