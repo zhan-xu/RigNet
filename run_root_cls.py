@@ -108,7 +108,7 @@ def main(args):
     best_epoch = checkpoint['epoch']
     model.load_state_dict(checkpoint['state_dict'])
     print("=> loaded checkpoint '{}' (epoch {})".format(os.path.join(args.checkpoint, 'model_best.pth.tar'), best_epoch))
-    test_loss, test_acc = test(test_loader, model, args)
+    test_loss, test_acc = test(test_loader, model)
     print('Best epoch:\n test_loss {:8f} test_acc {:8f}'.format(test_loss, test_acc))
 
 
