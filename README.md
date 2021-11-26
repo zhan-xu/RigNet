@@ -29,7 +29,7 @@ pip install "rtree>=0.8,<0.9"
 pip install trimesh[easy]
 conda install pytorch==1.7.1 torchvision==0.8.2 cudatoolkit=11.0 -c pytorch
 pip install --no-index torch-scatter torch-sparse torch-cluster -f https://pytorch-geometric.com/whl/torch-1.7.1+cu110.html
-pip install torch-geometric
+pip install torch-geometric==1.7.2
 ```
 
 #### For Windows user
