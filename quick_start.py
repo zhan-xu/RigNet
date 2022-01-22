@@ -322,7 +322,7 @@ def predict_skinning(input_data, pred_skel, skin_pred_net, surface_geodesic, mes
     input_data.skin_input = skin_input
     input_data.to(device)
 
-    skin_pred = skin_pred_net(data)
+    skin_pred = skin_pred_net(input_data)
     skin_pred = torch.softmax(skin_pred, dim=1)
     skin_pred = skin_pred.data.cpu().numpy()
     skin_pred = skin_pred * loss_mask
