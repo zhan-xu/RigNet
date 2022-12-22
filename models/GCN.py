@@ -27,6 +27,9 @@ class JointPredNet(torch.nn.Module):
         self.mlp_glb = MLP([(64 + 256 + 512), 1024])
         self.mlp_tramsform = Sequential(MLP([1024 + self.input_channel + 64 + 256 +512, 1024, 256]),
                                         Dropout(0.7), Linear(256, out_channels))
+        if self.arch == 'jointnet':
+            torch.nn.init.zeros_(self.mlp_tramsform[2].weight)
+            torch.nn.init.zeros_(self.mlp_tramsform[2].bias)
 
     def forward(self, data):
         if self.input_normal:
