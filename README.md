@@ -1,4 +1,4 @@
-This is the code repository implementing the paper "RigNet: Neural Rigging for Articulated Characters" published on SIGGRAPH 2020. [[Project page]](https://zhan-xu.github.io/rig-net/)
+This is the code repository implementing the paper "RigNet: Neural Rigging for Articulated Characters" published on SIGGRAPH 2020 [[Project page]](https://zhan-xu.github.io/rig-net/).
 
 **[2020.11.23]** There is now a great add-on for Blender based on our work, 
 implemented by @[pKrime](https://github.com/pKrime). Please check the Github [link](https://github.com/pKrime/brignet), and the video [demo](https://www.youtube.com/watch?v=ueLlS3IoeGY&feature=youtu.be). 
