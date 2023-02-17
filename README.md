@@ -1,10 +1,13 @@
 This is the code repository implementing the paper "RigNet: Neural Rigging for Articulated Characters" published on SIGGRAPH 2020 [[Project page]](https://zhan-xu.github.io/rig-net/).
 
-**[2020.11.23]** There is now a great add-on for Blender based on our work, 
-implemented by @[pKrime](https://github.com/pKrime). Please check the Github [link](https://github.com/pKrime/brignet), and the video [demo](https://www.youtube.com/watch?v=ueLlS3IoeGY&feature=youtu.be). 
+**[2023.02.17]** About dataset: Due to copyright concernS, we currently disable access to the ModelsResources dataset. If you are from a research lab and interested in the dataset, please send a request email to me at zhanxu@cs.umass.edu.
 
 **[2021.07.20]** Another add-on for Blender, 
 implemented by @[L-Medici](https://github.com/L-Medici). Please check the Github [link](https://github.com/L-Medici/Rignet_blender_addon).
+
+
+**[2020.11.23]** There is now a great add-on for Blender based on our work, 
+implemented by @[pKrime](https://github.com/pKrime). Please check the Github [link](https://github.com/pKrime/brignet), and the video [demo](https://www.youtube.com/watch?v=ueLlS3IoeGY&feature=youtu.be). 
 
 ## Dependecy and Setup
 
@@ -108,4 +111,4 @@ Notes: As new features, we have three improvements from the paper: (1) To train 
     `python -u run_skinning.py --train_folder='DATASET_DIR/train/' --val_folder='DATASET_DIR/val/' --test_folder='DATASET_DIR/test/' --checkpoint='checkpoints/skinnet' --logdir='logs/skinnet' --train_batch=4 --test_batch=4 --lr=1e-4 --Dg --Lf`
 
 ##  License
-This project is under dual-license. See the LICENSE README.txt file in this directory for complete text.
+This project is under LICENSE-GPLv3.
