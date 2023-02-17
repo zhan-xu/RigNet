@@ -1,6 +1,6 @@
 This is the code repository implementing the paper "RigNet: Neural Rigging for Articulated Characters" published on SIGGRAPH 2020 [[Project page]](https://zhan-xu.github.io/rig-net/).
 
-**[2023.02.17]** About dataset: Due to copyright concernS, we currently disable access to the ModelsResources dataset. If you are from a research lab and interested in the dataset, please send a request email to me at zhanxu@cs.umass.edu.
+**[2023.02.17]** About dataset: Due to copyright concerns, we currently disable access to the ModelsResources dataset. If you are from a research lab and interested in the dataset, please send a request email to me at zhanxu@cs.umass.edu.
 
 **[2021.07.20]** Another add-on for Blender, 
 implemented by @[L-Medici](https://github.com/L-Medici). Please check the Github [link](https://github.com/L-Medici/Rignet_blender_addon).
