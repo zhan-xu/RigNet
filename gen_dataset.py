@@ -28,6 +28,8 @@ def get_tpl_edges(remesh_obj_v, remesh_obj_f):
                     neighbor_ids.append(remesh_obj_f[face_id, v_id])
         neighbor_ids = list(set(neighbor_ids))
         neighbor_ids = [np.array([v, n])[np.newaxis, :] for n in neighbor_ids]
+        if len(neighbor_ids) == 0:
+            continue
         neighbor_ids = np.concatenate(neighbor_ids, axis=0)
         edge_index.append(neighbor_ids)
     edge_index = np.concatenate(edge_index, axis=0)

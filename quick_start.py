@@ -437,6 +437,15 @@ if __name__ == '__main__':
     # create data used for inferece
     print("creating data for model ID {:s}".format(model_id))
     mesh_filename = os.path.join(input_folder, '{:s}_remesh.obj'.format(model_id))
+    if not os.path.exists(mesh_filename):
+        mesh_ori_filename = os.path.join(input_folder, '{:s}_ori.obj'.format(model_id))
+        mesh_ori = o3d.io.read_triangle_mesh(mesh_ori_filename)
+        if len(np.asarray(mesh_ori.vertices)) == 0:
+            print(f"Please name your input model as {model_id}_ori.obj")
+            exit()
+        mesh_remesh = mesh_ori.simplify_quadric_decimation(4000)  # adjust vertices between 1K - 5K
+        o3d.io.write_triangle_mesh(mesh_filename, mesh_remesh)
+
     data, vox, surface_geodesic, translation_normalize, scale_normalize = create_single_data(mesh_filename)
     data.to(device)
 

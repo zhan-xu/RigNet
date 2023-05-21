@@ -17,22 +17,22 @@ On both platforms, we suggest to use conda virtual environment.
 
 #### For Linux user
 
-**[2021.07.20]** I have tested the code on Ubuntu 18.04, with cuda 11.0. The following commands have been updated which install pytorch 1.7.1 and pytorch_geometric 1.7.2. 
+**[2023.05.21]** I have tested the code on Ubuntu 22.04, with cuda 11.3. The following commands have been updated. 
 
 ```
-conda create --name rignet_cuda11 python=3.6
-conda activate rignet_cuda11
-```
+conda create --name rignet python=3.7
+conda activate rignet
+conda install pytorch==1.12.0 torchvision==0.13.0 cudatoolkit=11.3 -c pytorch
 
-Some necessary libraries include:
+# load cuda_toolkit 11.3
+export PATH=/usr/local/cuda_11.3/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda_11.3/lib64
 
-```
-pip install numpy scipy matplotlib tensorboard open3d==0.9.0 opencv-python
-pip install "rtree>=0.8,<0.9"
-pip install trimesh[easy]
-conda install pytorch==1.7.1 torchvision==0.8.2 cudatoolkit=11.0 -c pytorch
-pip install --no-index torch-scatter torch-sparse torch-cluster -f https://pytorch-geometric.com/whl/torch-1.7.1+cu110.html
+# require g++ < 10 to install the following pytorch geometric version.
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-1.12.0+cu113.html # this take a while
 pip install torch-geometric==1.7.2
+
+pip install numpy scipy matplotlib tensorboard open3d==0.9.0 opencv-python "rtree>=0.8,<0.9" trimesh[easy]  # Make sure to install open3d 0.9.0.
 ```
 
 #### For Windows user
