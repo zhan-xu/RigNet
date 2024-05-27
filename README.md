@@ -58,7 +58,7 @@ the remeshed ones have vertices between 1K to 5K. I use quadratic edge collapse 
 Please name the simplified meshed as *_remesh.obj.
 
 The predicted rigs are saved as *_rig.txt. You can combine the OBJ file and *_rig.txt into FBX format by 
-running maya_save_fbx.py provided by us in Maya using mayapy. (To use numpy in mayapy, download windows compiled numpy from [here](https://drive.google.com/drive/u/0/folders/0BwsYd1k8t0lEMjBCa2N1Z25KZXc) and put it in mayapy library folder. For example, mine is C:\Program Files\Autodesk\Maya2019\Python\Lib\site-packages)
+running maya_save_fbx.py provided by us in Maya using mayapy. (To use numpy in mayapy, download windows compiled numpy from [here](https://github.com/Eric-Vignola/numpy-for-python-2.7-64bit) and put it in mayapy library folder. For example, mine is C:\Program Files\Autodesk\Maya2019\Python\Lib\site-packages)
 
 ## Data
 
