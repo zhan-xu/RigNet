@@ -1,7 +1,5 @@
 This is the code repository implementing the paper "RigNet: Neural Rigging for Articulated Characters" published on SIGGRAPH 2020 [[Project page]](https://zhan-xu.github.io/rig-net/).
 
-**[2023.02.17]** About dataset: If you are from a research lab and interested in the dataset for non-commercial, research-only purposes, please send a request email to me at zhanxu@cs.umass.edu.
-
 **[2021.07.20]** Another add-on for Blender, 
 implemented by @[L-Medici](https://github.com/L-Medici). Please check the Github [link](https://github.com/L-Medici/Rignet_blender_addon).
 
@@ -44,7 +42,7 @@ The code has been tested on Windows 10 with cuda 10.1. The most important differ
 
 
 ## Quick start
-We provide a script for quick start. First download our trained models from [here](https://umass-my.sharepoint.com/:u:/g/personal/zhanxu_umass_edu/EYKLCvYTWFJArehlo3-H2SgBABnY08B4k5Q14K7H1Hh0VA). 
+We provide a script for quick start. First download our trained models from [here](https://drive.google.com/file/d/1gM2Lerk7a2R0g9DwlK3IvCfp8c2aFVXs/view?usp=sharing). 
 Put the checkpoints folder into the project folder. 
 
 Check and run quick_start.py. We provide some examples in this script. 
@@ -65,10 +63,10 @@ running maya_save_fbx.py provided by us in Maya using mayapy. (To use numpy in m
 Our dataset ModelsResource-RigNetv1 has 2,703 models. 
 We split it into 80% for training (2,163‬ models), 10%
 for validation (270 models), and 10% for testing. 
-All models in fbx format can be downloaded [here](https://umass-my.sharepoint.com/:u:/g/personal/zhanxu_umass_edu/EVgpX4uZEVNLu8OjX9JRaFYBzOjfm4znndui29evdEfs-g).
+All models in fbx format can be downloaded [here](https://drive.google.com/file/d/1yojBwl5eHPqgXZ1Uh4j26S-yKK-2loPu/view?usp=sharing).
 
 To use this dataset in this project, pre-processing is performed. 
-We put the pre-processed data [here](https://umass-my.sharepoint.com/:u:/g/personal/zhanxu_umass_edu/EaUH-2lI6-xOrJ0N9fDbZOABREt4ryEtQ64wmELF5SReTg), which consists of several sub-folders.
+We put the pre-processed data [here](https://drive.google.com/file/d/1-B6hJ4423rw1LrTForHp7oaG5qRAbJx3/view?usp=sharing), which consists of several sub-folders.
 
 * obj: all meshes in OBJ format.
 * rig_info: we store the rigging information into a txt file. Each txt file has four blocks. (1) Lines starting with "joint" define a joint with its 3D position. Each of joint line has four elements, which are joint_name, X, Y, and Z. (2) Line starting with "root" defines the name of root joint. (3) Lines starting with "hier" define the hierarchy of skeleton. Each hierarchy line has two elements, which are parent joint name and its child joint name. One parent joint can have multiple children joints. (4) Lines starting with "skin" define the skinning weights. Each skinning line follows the format as vertex_id, bind_joint_name_1, bind_weight_1, bind_joint_name_2, bind_weight_2 ... The vertex_id follows the vertice order in obj files in the above obj folder.
