@@ -35,9 +35,20 @@ pip install numpy scipy matplotlib tensorboard open3d==0.9.0 opencv-python "rtre
 
 #### For Windows user
 
-The code has been tested on Windows 10 with cuda 10.1. The most important difference from Linux setup is, you need to download Windows-compiled Rtree from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#rtree), and install it by
-`pip install Rtree‑0.9.4‑cp37‑cp37m‑win_amd64.whl` (64-bit system) or 
-`pip install Rtree‑0.9.4‑cp37‑cp37m‑win32.whl` (32-bit system). Other libraries can be installed in the same way as Linux setup instructions.
+The code has been tested on Windows 11 with Python 3.11, Pytorch 2.2.1, and Cuda 12.4 
+``` powershell
+# install pytorch
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# install torch geometric
+pip install torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.2.1+cu121.html
+
+pip install torch_geometric==2.5.1
+
+# install other dependencies
+pip install tensorboard==2.16.2 opencv-python==4.9.0.80 rtree==1.2.0 trimesh==4.2.0 open3d==0.18.0
+```
+
 
 
 
